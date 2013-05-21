@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>expand-icon.html</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <script type="text/javascript" src="../javascript/ExpandIcon.js"></script>
+        <script type="text/javascript">
+
+var icon = ExpandIcon()
+icon.element.style.background = '#272720'
+document.body.appendChild(icon.element)
+document.body.addEventListener('click', icon.flip)
+
+        </script>
+    </body>
+</html>

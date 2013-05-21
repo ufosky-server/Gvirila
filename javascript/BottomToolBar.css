@@ -1,0 +1,14 @@
+.BottomToolBar .ToolBar-bar {
+    top: auto;
+    bottom: 0;
+}
+
+.BottomToolBar .ToolBar-content {
+    top: 0;
+    bottom: 40px;
+    transition: bottom 0.2s ease-in-out;
+    -webkit-transition: bottom 0.2s ease-in-out;
+}
+.hidden > .ToolBar-content {
+    bottom: 0;
+}

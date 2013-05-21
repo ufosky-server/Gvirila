@@ -1,0 +1,190 @@
+.FileTabs_ScrollBarArrow {
+    cursor: pointer;
+    position: absolute;
+    top: 4px;
+    width: 16px;
+    height: 30px;
+}
+.FileTabs_ScrollBarArrow:hover {
+    background: #575750;
+    box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1) inset;
+}
+.FileTabs_ScrollBarArrow:active {
+    background: #171710;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+}
+.FileTabs_ScrollBarArrow.disabled:hover,
+.FileTabs_ScrollBarArrow.disabled:active {
+    background-color: transparent;
+    box-shadow: none;
+}
+.FileTabs_ScrollBarArrow:active > .FileTabs_ScrollBarArrow-icon {
+    opacity: 0.7;
+}
+.FileTabs_ScrollBarArrow.disabled > .FileTabs_ScrollBarArrow-icon {
+    opacity: 0.4;
+}
+.FileTabs_ScrollBarArrow.left {
+    left: 4px;
+}
+.FileTabs_ScrollBarArrow.right {
+    right: 4px;
+}
+
+.FileTabs_ScrollBarArrow-icon {
+    position: absolute;
+    width: 12px;
+    height: 14px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+.FileTabs_ScrollBarArrow-icon.left {
+    background-position: 0 -24px;
+}
+.FileTabs_ScrollBarArrow-icon.right {
+    background-position: -12px -24px;
+}
+.FileTabs_ScrollBar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    border-top: 1px solid #474740;
+    border-bottom: 1px solid #202017;
+    border-left: 1px solid #474740;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    -webkit-transition: opacity 0.2s ease-in-out;
+}
+.FileTabs_ScrollBar.visible {
+    opacity: 1;
+}
+
+.FileTabs_ScrollBar-gradient {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 40px;
+    left: 0;
+    background-image: linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
+    background-image: -webkit-linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
+}
+
+.FileTabs_ScrollBar-center {
+    position: absolute;
+    top: -1px;
+    right: 24px;
+    bottom: -1px;
+    left: 24px;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.FileTabs_ScrollBar-container {
+    white-space: nowrap;
+}
+
+.FileTabs_ScrollBar-items {
+    background: rgba(247, 247, 240, 0.1);
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    transition: left 0.2s;
+    -webkit-transition: left 0.2s;
+}
+.FileTabs_Tab {
+    height: 40px;
+    border: 1px solid rgba(247, 247, 240, 0.1);
+    border-bottom: 0;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    color: #f7f7f0;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.FileTabs_Tab:hover {
+    background: rgba(247, 247, 240, 0.2);
+}
+.FileTabs_Tab.active {
+    color: #000;
+    background: #d7d7d0;
+    background: linear-gradient(#e7e7e0, #d7d7d0);
+    background: -webkit-linear-gradient(#e7e7e0, #d7d7d0);
+}
+
+.FileTabs_Tab-wrapper {
+    position: relative;
+    top: -1px;
+    padding: 0 40px 0 38px;
+    height: 40px;
+    margin-bottom: -1px;
+}
+
+.FileTabs_Tab-text {
+    display: inline-block;
+    line-height: 40px;
+}
+
+.FileTabs_Tab-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 7px;
+    margin: auto;
+    transition: background-color 0.1s;
+    -webkit-transition: background-color 0.1s;
+}
+
+.FileTabs_Tab-infoHint {
+    position: absolute;
+    top: 100%;
+    left: 4px;
+    display: none;
+}
+.FileTabs_Tab-wrapper:hover .FileTabs_Tab-infoHint.visible {
+    display: block;
+}
+
+.FileTabs_Tab .ToolButton {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    bottom: 0;
+    margin: auto;
+}
+.FileTabs_Tabs {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #272720 fixed;
+}
+
+.FileTabs_Tabs-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid;
+    border-color: #474740 #272720 #272720 #474740;
+    background: #373730;
+    transition: top 0.2s ease-in-out;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+.FileTabs_Tabs-content {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+}
+
+.FileTabs_Tabs.visible > .FileTabs_Tabs-wrapper {
+    top: 40px;
+}

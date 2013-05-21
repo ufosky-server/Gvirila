@@ -1,0 +1,15 @@
+.PreferencesDialog_GeneralTab {
+    padding: 4px;
+}
+
+.PreferencesDialog_GeneralTab-tabSize {
+    position: relative;
+    height: 30px;
+    margin: 4px;
+}
+.PreferencesDialog_GeneralTab-tabSize .LeftLabel-label {
+    width: 90px;
+}
+.PreferencesDialog_GeneralTab-tabSize .LeftLabel-value {
+    left: 90px;
+}

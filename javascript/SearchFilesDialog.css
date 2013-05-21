@@ -1,0 +1,38 @@
+.SearchFilesDialog {
+    top: 40px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+}
+
+.SearchFilesDialog-nameField {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    left: 8px;
+    height: 30px;
+}
+
+.SearchFilesDialog-contentField {
+    position: absolute;
+    top: 46px;
+    right: 8px;
+    left: 8px;
+    height: 30px;
+}
+
+.SearchFilesDialog-list {
+    position: absolute;
+    top: 84px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+.SearchFilesDialog .LeftLabel-label {
+    width: 130px;
+}
+.SearchFilesDialog .LeftLabel-value {
+    left: 130px;
+}

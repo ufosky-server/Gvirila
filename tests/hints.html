@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>hints.html</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Hint.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/ArrowDownHint.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/ArrowUpHint.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/IconSprite.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Main.css" />
+        <style type="text/css">
+.wrapper {
+    position: relative;
+    height: 100px;
+}
+        </style>
+    </head>
+    <body>
+        <div id="target" style="position: absolute; top: 20px; left: 20px"></div>
+        <script type="text/javascript" src="../javascript/ArrowDownHint.js"></script>
+        <script type="text/javascript" src="../javascript/ArrowUpHint.js"></script>
+        <script type="text/javascript" src="../javascript/Div.js"></script>
+        <script type="text/javascript" src="../javascript/Hint.js"></script>
+        <script type="text/javascript" src="../javascript/TextNode.js"></script>
+        <script type="text/javascript">
+
+function add (hint, text) {
+    hint.setContentElement(TextNode(text))
+    var div = Div('wrapper')
+    div.appendChild(hint.element)
+    target.appendChild(div)
+}
+
+var target = document.getElementById('target')
+
+add(ArrowUpHint(), 'arrowUpHint left')
+add((function () {
+    var hint = ArrowUpHint()
+    hint.alignRight()
+    return hint
+})(), 'arrowUpHint right')
+add(ArrowDownHint(), 'arrowDownHint left')
+add((function () {
+    var hint = ArrowDownHint()
+    hint.alignRight()
+    return hint
+})(), 'arrowDownHint right')
+
+        </script>
+    </body>
+</html>

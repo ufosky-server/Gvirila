@@ -1,0 +1,129 @@
+.Icon {
+    width: 24px;
+    height: 24px;
+    background: no-repeat 24px 0;
+}
+
+.Icon.network-folder {
+    background-position: 0px 0px;
+}
+.Icon.new-network-folder {
+    background-position: -24px 0px;
+}
+.Icon.folder {
+    background-position: -48px 0px;
+}
+.Icon.new-folder {
+    background-position: -72px 0px;
+}
+.Icon.open-file {
+    background-position: -96px 0px;
+}
+.Icon.file {
+    background-position: -120px 0px;
+}
+.Icon.html-file {
+    background-position: -144px 0px;
+}
+.Icon.css-file {
+    background-position: -168px 0px;
+}
+.Icon.php-file {
+    background-position: -192px 0px;
+}
+.Icon.new-file {
+    background-position: -216px 0px;
+}
+.Icon.home {
+    background-position: -240px 0px;
+}
+.Icon.refresh {
+    background-position: -264px 0px;
+}
+.Icon.previous {
+    background-position: -288px 0px;
+}
+.Icon.next {
+    background-position: -312px 0px;
+}
+.Icon.up {
+    background-position: -336px 0px;
+}
+.Icon.trash {
+    background-position: -360px 0px;
+}
+.Icon.save {
+    background-position: -384px 0px;
+}
+.Icon.save-as {
+    background-position: -408px 0px;
+}
+.Icon.search {
+    background-position: -432px 0px;
+}
+.Icon.replace {
+    background-position: -456px 0px;
+}
+.Icon.search-files {
+    background-position: -480px 0px;
+}
+.Icon.stop {
+    background-position: -504px 0px;
+}
+.Icon.info {
+    background-position: -528px 0px;
+}
+.Icon.warning {
+    background-position: -552px 0px;
+}
+.Icon.preferences {
+    background-position: -576px 0px;
+}
+.Icon.checked {
+    background-position: -600px 0px;
+}
+.Icon.unchecked {
+    background-position: -624px 0px;
+}
+.Icon.hidden {
+    background-position: -648px 0px;
+}
+.Icon.redo {
+    background-position: -672px 0px;
+}
+.Icon.undo {
+    background-position: -696px 0px;
+}
+.Icon.share {
+    background-position: -720px 0px;
+}
+.Icon.gotoline {
+    background-position: -744px 0px;
+}
+.Icon.import {
+    background-position: -768px 0px;
+}
+.Icon.export {
+    background-position: -792px 0px;
+}
+.Icon.close {
+    background-position: -816px 0px;
+}
+.Icon.select {
+    background-position: -840px 0px;
+}
+.Icon.upper-case {
+    background-position: -864px 0px;
+}
+.Icon.lower-case {
+    background-position: -888px 0px;
+}
+.Icon.invert-case {
+    background-position: -912px 0px;
+}
+.Icon.rename {
+    background-position: -936px 0px;
+}
+.Icon.unsaved-file {
+    background-position: -960px 0px;
+}

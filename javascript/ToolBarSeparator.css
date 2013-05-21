@@ -1,0 +1,11 @@
+.ToolBarSeparator {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 2px;
+    position: relative;
+    top: -2px;
+    height: 38px;
+    width: 2px;
+    background: #202017;
+    border-right: 1px solid #474740;
+}

@@ -1,0 +1,29 @@
+.File_Bar {
+    overflow: hidden;
+    background: #c7c7c0;
+}
+
+.File_Bar-bar {
+    position: absolute;
+    height: 40px;
+    top: -40px;
+    right: 0;
+    left: 0;
+    transition: top 0.2s ease-in-out;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+.File_Bar-content {
+    transition: top 0.2s ease-in-out;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+.File_Bar.visible > .File_Bar-content {
+    top: 40px;
+}
+.File_Bar.visible > .File_Bar-bar {
+    top: 0px;
+}
+.File_Bar .Button {
+    margin-left: 5px;
+}

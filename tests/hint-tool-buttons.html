@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>hint-tool-buttons.html</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Description.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Hint.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/HintToolButton.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/ArrowUpHint.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/ArrowUpHintToolButton.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Icon.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/IconSprite.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/ToolButton.css" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Main.css" />
+    </head>
+    <body>
+        <div id="target" style="position: absolute; top: 20px; left: 20px"></div>
+        <script type="text/javascript" src="../javascript/ArrowUpHint.js"></script>
+        <script type="text/javascript" src="../javascript/ArrowUpHintToolButton.js"></script>
+        <script type="text/javascript" src="../javascript/Description.js"></script>
+        <script type="text/javascript" src="../javascript/Div.js"></script>
+        <script type="text/javascript" src="../javascript/Hint.js"></script>
+        <script type="text/javascript" src="../javascript/HintToolButton.js"></script>
+        <script type="text/javascript" src="../javascript/Icon.js"></script>
+        <script type="text/javascript" src="../javascript/TextNode.js"></script>
+        <script type="text/javascript" src="../javascript/ToolButton.js"></script>
+        <script type="text/javascript">
+
+var arrowUpHintToolButton = ArrowUpHintToolButton(ToolButton(Icon('file').element))
+arrowUpHintToolButton.setTitle('test text')
+
+var arrowDownHintToolButton = ArrowUpHintToolButton(ToolButton(Icon('file').element))
+arrowDownHintToolButton.alignRight()
+arrowDownHintToolButton.setTitle('test text')
+
+var target = document.getElementById('target')
+target.appendChild(arrowUpHintToolButton.element)
+target.appendChild(arrowDownHintToolButton.element)
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+.Spinner {
+    background: #e7e7e0;
+    color: #070700;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 4px;
+    position: relative;
+    border-radius: 2px;
+}
+
+.Spinner-button {
+    bottom: 4px;
+    height: 22px;
+    padding: 0;
+    position: absolute;
+    top: 4px;
+    width: 22px;
+}
+.Spinner-button.plus {
+    right: 4px;
+}
+.Spinner-button.minus {
+    right: 30px;
+}
+
+.Spinner-buttonIcon {
+    background-repeat: no-repeat;
+    height: 14px;
+    margin: auto;
+    width: 14px;
+}
+.Spinner-buttonIcon.plus {
+    background-position: -36px -24px;
+}
+.Spinner-buttonIcon.minus {
+    background-position: -50px -24px;
+}
+.Spinner-button.active .Spinner-buttonIcon,
+.Spinner-button:active .Spinner-buttonIcon {
+    opacity: 0.6;
+}

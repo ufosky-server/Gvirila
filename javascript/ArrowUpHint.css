@@ -1,0 +1,8 @@
+.ArrowUpHint {
+    padding-top: 8px;
+}
+
+.ArrowUpHint .Hint-arrow {
+    background-position: -24px -24px;
+    top: 1px;
+}

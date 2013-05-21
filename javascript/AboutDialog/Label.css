@@ -1,0 +1,12 @@
+.AboutDialog_Label {
+    white-space: nowrap;
+}
+
+.AboutDialog_Label-content {
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.AboutDialog_Label .LoadingIcon {
+    margin: -6px -2px;
+}

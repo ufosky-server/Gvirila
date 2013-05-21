@@ -1,0 +1,22 @@
+.SaveFileDialog {
+    top: 40px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+}
+
+.SaveFileDialog-nameField {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left:0;
+    height: 46px;
+}
+
+.SaveFileDialog-fileList {
+    position: absolute;
+    top: 46px;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+}

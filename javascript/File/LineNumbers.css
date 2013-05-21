@@ -1,0 +1,57 @@
+.File_LineNumbers {
+    background: #e7e7e0;
+}
+
+.File_LineNumbers-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 44px;
+    transition: left 0.2s ease-in-out;
+    -webkit-transition: left 0.2s ease-in-out;
+}
+.File_LineNumbers.hidden .File_LineNumbers-content {
+    left: 0;
+}
+
+.File_LineNumbers-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    transition: left 0.2s ease-in-out;
+    -webkit-transition: left 0.2s ease-in-out;
+}
+.File_LineNumbers.hidden .File_LineNumbers-bar {
+    left: -44px;
+}
+
+.File_LineNumbers-numbers {
+    background: #c7c7c0;
+    width: 44px;
+    position: relative;
+    min-height: 100%;
+}
+
+.File_LineNumbers-number {
+    font-family: monospace;
+    text-align: right;
+    margin-right: 1px;
+    overflow: hidden;
+    color: #777770;
+}
+.File_LineNumbers-number.current {
+    font-weight: bold;
+}
+
+.File_LineNumbers-line {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 44px;
+    background: #c7e790;
+    height: 16px;
+}

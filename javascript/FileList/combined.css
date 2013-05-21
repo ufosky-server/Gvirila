@@ -1,0 +1,131 @@
+.FileList_EmptyFolder {
+    height: 40px;
+    position: relative;
+    color: #f7f7f0;
+}
+
+.FileList_EmptyFolder-icon {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+.FileList_EmptyFolder-text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 40px;
+    line-height: 40px;
+}
+.FileList_FileItem {
+    position: relative;
+    height: 40px;
+    color: #f7f7f0;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+.FileList_FileItem.selected {
+    background: #669900;
+    background-image: linear-gradient(#77aa11, #669900);
+    background-image: -webkit-linear-gradient(#77aa11, #669900);
+    box-shadow: 0 0 2px #77aa11 inset;
+}
+
+.FileList_FileItem-icon {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+.FileList_FileItem-text {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    left: 40px;
+    height: 40px;
+    line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.selected > .FileList_FileItem-text {
+    right: 34px;
+}
+
+.FileList_FileItem-touchButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+}
+.selected > .FileList_FileItem-touchButton {
+    display: block;
+}
+.FileList_FolderItem-button {
+    position: relative;
+    height: 40px;
+    color: #f7f7f0;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+.FileList_FolderItem-button.selected {
+    background: #669900;
+    background-image: linear-gradient(#77aa11, #669900);
+    background-image: -webkit-linear-gradient(#77aa11, #669900);
+    box-shadow: 0 0 2px #77aa11 inset;
+}
+
+.FileList_FolderItem-expandButton {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.FileList_FolderItem-folderIcon {
+    position: absolute;
+    top: 8px;
+    left: 40px;
+}
+
+.FileList_FolderItem-text {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    left: 72px;
+    height: 40px;
+    line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.selected > .FileList_FolderItem-text {
+    right: 34px;
+}
+
+.FileList_FolderItem-touchButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+}
+.selected > .FileList_FolderItem-touchButton {
+    display: block;
+}
+
+.FileList_FolderItem-items {
+    margin-left: 20px;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    -webkit-transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+.FileList_FolderItem-items.expanded {
+    opacity: 1;
+}
+.FileList_List {
+    overflow-y: auto;
+}

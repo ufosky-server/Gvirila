@@ -1,0 +1,19 @@
+.Dialog {
+    background: rgba(7, 7, 0, 0.4);
+    color: #f7f7f0;
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+    -webkit-transition: opacity 0.2s ease-in;
+}
+.Dialog.visible {
+    opacity: 1;
+}
+
+.Dialog-frame {
+    margin: auto;
+    background: #373730;
+    border: 1px solid #171710;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(7, 7, 0, 0.8);
+    border-radius: 2px;
+}

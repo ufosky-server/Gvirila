@@ -1,0 +1,21 @@
+.ResetSessionConfirmDialog {
+    width: 340px;
+    height: 121px;
+}
+
+.ResetSessionConfirmDialog-fit {
+    text-align: center;
+    padding: 0 8px;
+}
+
+.ResetSessionConfirmDialog-aligner {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.ResetSessionConfirmDialog-text {
+    display: inline-block;
+    vertical-align: middle;
+    color: #f7f7f0;
+}

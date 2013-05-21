@@ -1,0 +1,22 @@
+.SidePane-pane {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -311px;
+    width: 311px;
+    border-right: 1px solid #272720;
+    transition: left 0.2s ease-in-out;
+    -webkit-transition: left 0.2s ease-in-out;
+}
+
+.SidePane-content {
+    transition: left 0.2s ease-in-out;
+    -webkit-transition: left 0.2s ease-in-out;
+}
+
+.SidePane.visible > .SidePane-pane {
+    left: 0;
+}
+.SidePane.visible > .SidePane-content {
+    left: 311px;
+}

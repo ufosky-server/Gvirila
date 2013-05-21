@@ -1,0 +1,20 @@
+.AboutDialog_Dialog {
+    width: 390px;
+    height: 219px;
+}
+
+.AboutDialog_Dialog-content {
+    padding: 22px 22px 22px 114px;
+    background: 26px 50% no-repeat;
+}
+
+.AboutDialog_Dialog-title {
+    font-size: 38px;
+    line-height: 38px;
+    font-family: serif;
+    margin-bottom: 8px;
+}
+
+.AboutDialog_Dialog-website {
+    margin-top: 8px;
+}

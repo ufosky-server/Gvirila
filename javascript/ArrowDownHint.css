@@ -1,0 +1,8 @@
+.ArrowDownHint {
+    padding-bottom: 8px;
+}
+
+.ArrowDownHint .Hint-arrow {
+    background-position: -24px -31px;
+    bottom: 1px;
+}

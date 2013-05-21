@@ -1,0 +1,8 @@
+.RichTextarea_Textarea {
+    width: 100%;
+    height: 100%;
+    font-family: monospace;
+    cursor: text;
+    vertical-align: top;
+    resize: none;
+}

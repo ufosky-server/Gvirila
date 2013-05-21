@@ -1,0 +1,32 @@
+.File_SearchBar-textField {
+    position: absolute;
+    right: 110px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 30px;
+    margin: auto;
+}
+.File_SearchBar-textField .LeftLabel-label {
+    width: 110px;
+}
+.File_SearchBar-textField .LeftLabel-value {
+    left: 110px;
+}
+.File_SearchBar-textField .TextField {
+    border: 1px solid #b7b7b0;
+}
+
+.File_SearchBar-buttons {
+    white-space: nowrap;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    bottom: 0;
+    height: 30px;
+    margin: auto;
+    width: 105px;
+}
+.File_SearchBar-buttons > .HintToolButton {
+    margin-left: 5px;
+}

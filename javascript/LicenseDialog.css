@@ -1,0 +1,27 @@
+.LicenseDialog {
+    width: 560px;
+    height: 274px;
+}
+
+.LicenseDialog-content {
+    padding: 8px;
+    margin: 8px;
+}
+
+.LicenseDialog-content .LoadingIcon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+.LicenseDialog-error {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.LicenseDialog-errorText {
+    margin: 1em 0;
+}

@@ -1,0 +1,29 @@
+.Hint {
+    z-index: 1;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+.Hint-arrow {
+    position: absolute;
+    left: 9px;
+    height: 7px;
+    width: 12px;
+}
+
+.Hint-arrow.right {
+    left: auto;
+    right: 9px;
+}
+
+.Hint-text {
+    min-width: 30px;
+    text-align: center;
+    white-space: nowrap;
+    padding: 4px;
+    color: #f7f7f0;
+    background: #070700;
+    box-shadow: 0 1px 1px rgba(7, 7, 0, 0.4);
+    border-radius: 2px;
+}

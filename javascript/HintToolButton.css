@@ -1,0 +1,24 @@
+.HintToolButton {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.HintToolButton-hint {
+    display: none;
+    position: absolute;
+    left: 0;
+}
+.HintToolButton-hint.right {
+    left: auto;
+    right: 0;
+}
+
+.HintToolButton:hover > .HintToolButton-hint {
+    display: block;
+}
+
+.HintToolButton:hover > .HintToolButton-hint:hover {
+    display: none;
+}

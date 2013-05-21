@@ -1,0 +1,15 @@
+.TopLabel {
+    position: relative;
+    margin: 0 8px;
+}
+
+.TopLabel-property {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+}
+
+.TopLabel-value {
+    position: relative;
+    height: 30px;
+}

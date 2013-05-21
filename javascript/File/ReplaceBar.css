@@ -1,0 +1,36 @@
+.File_ReplaceBar > .File_Bar-bar {
+    height: 36px;
+}
+.File_ReplaceBar.visible > .File_Bar-content {
+    top: 36px;
+}
+
+.File_ReplaceBar-textField {
+    position: absolute;
+    right: 195px;
+    top: 0;
+    left: 0;
+    height: 30px;
+}
+.File_ReplaceBar-textField .LeftLabel-label {
+    width: 110px;
+}
+.File_ReplaceBar-textField .LeftLabel-value {
+    left: 110px;
+}
+.File_ReplaceBar-textField .TextField {
+    border: 1px solid #b7b7b0;
+}
+
+.File_ReplaceBar-buttons {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    width: 190px;
+    margin: auto;
+}
+.File_ReplaceBar-buttons .Button {
+    vertical-align: top;
+    width: 90px;
+    margin-left: 5px;
+}

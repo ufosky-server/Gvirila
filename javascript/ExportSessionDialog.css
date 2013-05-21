@@ -1,0 +1,11 @@
+.ExportSessionDialog {
+    width: 340px;
+    height: 155px;
+}
+.ExportSessionDialog .ButtonBar-content {
+    padding: 8px 0;
+}
+
+.ExportSessionDialog-downloadButton {
+    margin: 0 8px;
+}

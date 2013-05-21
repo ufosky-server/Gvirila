@@ -1,0 +1,46 @@
+.DocumentStatisticsDialog {
+    width: 420px;
+    height: 245px;
+}
+
+.DocumentStatisticsDialog-content {
+    padding: 8px 16px;
+}
+
+.DocumentStatisticsDialog-label {
+    color: #f7f7f0;
+    height: 30px;
+    position: relative;
+}
+
+.DocumentStatisticsDialog-property {
+    position: absolute;
+    top: 0;
+    right: 120px;
+    bottom: 0;
+    left: 0;
+    line-height: 30px;
+}
+
+.DocumentStatisticsDialog-totalValue {
+    position: absolute;
+    top: 0;
+    right: 100px;
+    bottom: 0;
+    width: 100px;
+    line-height: 30px;
+    text-align: right;
+}
+
+.DocumentStatisticsDialog-selectionValue {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    line-height: 30px;
+    text-align: right;
+}
+.DocumentStatisticsDialog-selectionValue.disabled {
+    opacity: 0.5;
+}

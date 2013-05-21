@@ -1,0 +1,39 @@
+.File_GoToLineBar-label {
+    height: 40px;
+    width: 100px;
+    line-height: 40px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    text-align: right;
+}
+
+.File_GoToLineBar-textField {
+    position: absolute;
+    top: 0;
+    right: 72px;
+    bottom: 0;
+    left: 0;
+    height: 30px;
+    margin: auto;
+}
+.File_GoToLineBar-textField .LeftLabel-label {
+    width: 110px;
+}
+.File_GoToLineBar-textField .LeftLabel-value {
+    left: 110px;
+}
+.File_GoToLineBar-textField .TextField {
+    border: 1px solid #c7c7c0;
+}
+
+.File_GoToLineBar-buttons {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    bottom: 0;
+    height: 28px;
+    margin: auto;
+    width: 64px;
+}

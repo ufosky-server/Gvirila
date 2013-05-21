@@ -1,0 +1,11 @@
+.MessagePane {
+    color: #f7f7f0;
+    padding: 0 10px;
+    position: relative;
+    top: 30px;
+    text-align: center;
+}
+
+.MessagePane-icon {
+    margin: auto;
+}

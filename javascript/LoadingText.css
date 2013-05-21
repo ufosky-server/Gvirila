@@ -1,0 +1,12 @@
+.LoadingText {
+    color: #f7f7f0;
+    line-height: 30px;
+    height: 30px;
+    text-align: right;
+}
+
+.LoadingText-text {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 8px;
+}

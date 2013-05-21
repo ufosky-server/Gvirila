@@ -1,0 +1,32 @@
+.FileTabs_Tabs {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #272720 fixed;
+}
+
+.FileTabs_Tabs-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid;
+    border-color: #474740 #272720 #272720 #474740;
+    background: #373730;
+    transition: top 0.2s ease-in-out;
+    -webkit-transition: top 0.2s ease-in-out;
+}
+
+.FileTabs_Tabs-content {
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+}
+
+.FileTabs_Tabs.visible > .FileTabs_Tabs-wrapper {
+    top: 40px;
+}

@@ -1,0 +1,56 @@
+.ToolButton {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    height: 30px;
+    padding: 3px;
+    cursor: pointer;
+    color: #f7f7f0;
+    border-radius: 2px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+.ToolButton:hover {
+    background: rgba(167, 167, 160, 0.3);
+}
+.ToolButton.active,
+.ToolButton:active {
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset;
+}
+.ToolButton:active > .ToolButton-icon {
+    opacity: 0.7;
+}
+
+.ToolButton-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ToolButton-text {
+    padding: 0 2px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ToolButton.disabled,
+.ToolButton.disabled:hover,
+.ToolButton.disabled:active {
+    color: #878780;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.ToolButton-icon.disabled,
+.ToolButton:active > .ToolButton-icon.disabled {
+    opacity: 0.4;
+}
+
+.ToolButton .LoadingIcon {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+}

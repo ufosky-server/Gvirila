@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>loading-icon.html</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" type="text/css" href="../javascript/Main.css" />
+    </head>
+    <body>
+        <div id="target" style="position: absolute; top: 20px; left: 20px"></div>
+        <script type="text/javascript" src="../javascript/LoadingIcon.js"></script>
+        <script type="text/javascript">
+
+var target = document.getElementById('target')
+
+var colorSchemes = [
+    ['#272720', '#f7f7f0'],
+    ['#f7f7f0', '#272720'],
+]
+
+colorSchemes.forEach(function (colorScheme) {
+    var loadingIcon = LoadingIcon(colorScheme[0])
+    loadingIcon.element.style.backgroundColor = colorScheme[1]
+    target.appendChild(loadingIcon.element)
+})
+
+        </script>
+    </body>
+</html>

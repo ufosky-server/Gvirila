@@ -1,0 +1,21 @@
+.SaveChangesConfirmDialog {
+    width: 470px;
+    height: 121px;
+}
+
+.SaveChangesConfirmDialog-fit {
+    text-align: center;
+    padding: 0 8px;
+}
+
+.SaveChangesConfirmDialog-aligner {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.SaveChangesConfirmDialog-text {
+    display: inline-block;
+    vertical-align: middle;
+    color: #f7f7f0;
+}

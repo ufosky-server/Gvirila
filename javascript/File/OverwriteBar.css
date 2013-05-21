@@ -1,0 +1,41 @@
+.File_OverwriteBar-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 8px;
+    margin: auto;
+}
+
+.File_OverwriteBar-text {
+    position: absolute;
+    left: 40px;
+    right: 320px;
+    line-height: 40px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.File_OverwriteBar-buttons {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    bottom: 0;
+    width: 315px;
+    height: 30px;
+    margin: auto;
+    white-space: nowrap;
+}
+.File_OverwriteBar-buttons > .HintToolButton {
+    vertical-align: middle;
+    margin-left: 5px;
+}
+.File_OverwriteBar-buttons .Button {
+    vertical-align: top;
+}
+
+.File_OverwriteBar-overwrite {
+    width: 100px;
+}
+.File_OverwriteBar-discard {
+    width: 170px;
+}

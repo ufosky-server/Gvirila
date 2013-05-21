@@ -1,0 +1,20 @@
+.RevertFileConfirmDialog {
+    width: 340px;
+    height: 120px;
+}
+
+.RevertFileConfirmDialog-fit {
+    text-align: center;
+    padding: 0 8px;
+}
+
+.RevertFileConfirmDialog-aligner {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.RevertFileConfirmDialog-text {
+    display: inline-block;
+    vertical-align: middle;
+}

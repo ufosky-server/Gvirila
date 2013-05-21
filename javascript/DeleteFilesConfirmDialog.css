@@ -1,0 +1,21 @@
+.DeleteFilesConfirmDialog {
+    width: 400px;
+    height: 121px;
+}
+
+.DeleteFilesConfirmDialog-fit {
+    text-align: center;
+    padding: 0 8px;
+}
+
+.DeleteFilesConfirmDialog-aligner {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.DeleteFilesConfirmDialog-text {
+    display: inline-block;
+    vertical-align: middle;
+    color: #f7f7f0;
+}

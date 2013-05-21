@@ -1,0 +1,9 @@
+.PreferencesDialog_LanguageTab {
+    padding: 4px;
+}
+
+.PreferencesDialog_LanguageTab-list {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
