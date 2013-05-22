@@ -92,6 +92,7 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         forRichTextarea: fileTabs.forRichTextarea,
         getActiveTab: fileTabs.getActiveTab,
         getPath: fileList.getPath,
+        isModified: fileTabs.isModified,
         onCanDeleteText: fileTabs.onCanDeleteText,
         onCanUndoRedo: fileTabs.onCanUndoRedo,
         onDialogHide: fileList.onDialogHide,

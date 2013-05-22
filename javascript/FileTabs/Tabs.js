@@ -199,6 +199,12 @@ function FileTabs_Tabs () {
         getActiveTab: function () {
             return activeTab
         },
+        isModified: function () {
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].isModified()) return true
+            }
+            return false
+        },
         keyDown: function (e) {
             if (activeTab) {
                 activeTab.keyDown(e)

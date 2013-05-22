@@ -272,20 +272,12 @@ function RootPane () {
     var languages = Languages()
 
     var preferences = Preferences(languages)
+    preferences.onChange(reloadPreferences)
 
     var menuBar = MenuBar_Bar(),
         dialogContainer = menuBar.element
 
     var remoteApi = AwakeRemoteAPI()
-
-    var saveFileDialog = SaveFileDialog(dialogContainer, preferences, remoteApi)
-    saveFileDialog.onFolderChange(function (path) {
-        // if a new file was saved in the current directory
-        // then refresh file list
-        if (path == sidePane.getPath()) {
-            sidePane.reloadFolder()
-        }
-    })
 
     var sidePane = SidePane(dialogContainer, preferences, remoteApi)
     sidePane.setPaneVisible(preferences.showSidePane)
@@ -359,9 +351,6 @@ function RootPane () {
             }
         }
     })
-
-    var openFileDialog = OpenFileDialog(dialogContainer, preferences, remoteApi)
-    openFileDialog.onFileSelect(sidePane.openFile)
 
     var newFileMenuItem = Menu_Item('Ctrl+N')
     newFileMenuItem.setIconName('new-file')
@@ -650,16 +639,18 @@ function RootPane () {
     var notificationBar = NotificationBar()
     notificationBar.contentElement.appendChild(menuBar.element)
 
+    var showNotification = notificationBar.show
+
     var changeCaseModifier = Modifiers_ChangeCase()
 
     var encodeBase64Modifier = Modifiers_EncodeBase64(preferences)
-    encodeBase64Modifier.onNotification(notificationBar.show)
+    encodeBase64Modifier.onNotification(showNotification)
 
     var encodeHexModifier = Modifiers_EncodeHex(preferences)
-    encodeHexModifier.onNotification(notificationBar.show)
+    encodeHexModifier.onNotification(showNotification)
 
     var exportSessionDialog = ExportSessionDialog(dialogContainer, preferences, remoteApi)
-    exportSessionDialog.onNotification(notificationBar.show)
+    exportSessionDialog.onNotification(showNotification)
 
     var exportSessionMenuItem = Menu_Item()
     exportSessionMenuItem.setIconName('export')
@@ -669,7 +660,7 @@ function RootPane () {
 
     var importSessionDialog = ImportSessionDialog(dialogContainer, preferences, remoteApi)
     importSessionDialog.onImport(sidePane.reloadFolder)
-    importSessionDialog.onNotification(notificationBar.show)
+    importSessionDialog.onNotification(showNotification)
 
     var importSessionMenuItem = Menu_Item()
     importSessionMenuItem.setIconName('import')
@@ -752,14 +743,19 @@ function RootPane () {
     menuBar.addItem(helpMenuBarItem)
     menuBar.contentElement.appendChild(toolBar.element)
 
-    sidePane.onNotification(notificationBar.show)
-    sidePane.onHiddenFilesShow(function (show) {
-        showHiddenFiles(show)
-        hiddenFilesMenuItem.setChecked(show)
+    var openFileDialog = OpenFileDialog(dialogContainer, preferences, remoteApi)
+    openFileDialog.onFileSelect(sidePane.openFile)
+    openFileDialog.onNotification(showNotification)
+
+    var saveFileDialog = SaveFileDialog(dialogContainer, preferences, remoteApi)
+    saveFileDialog.onNotification(showNotification)
+    saveFileDialog.onFolderChange(function (path) {
+        // if a new file was saved in the current directory
+        // then refresh file list
+        if (path == sidePane.getPath()) {
+            sidePane.reloadFolder()
+        }
     })
-    openFileDialog.onNotification(notificationBar.show)
-    saveFileDialog.onNotification(notificationBar.show)
-    sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
 
     var element = AbsoluteDiv('RootPane')
     element.style.backgroundImage = 'url(images/background.png)'
@@ -780,9 +776,13 @@ function RootPane () {
         }
     })
 
-    preferences.onChange(reloadPreferences)
+    sidePane.onNotification(showNotification)
+    sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
+    sidePane.onHiddenFilesShow(function (show) {
+        showHiddenFiles(show)
+        hiddenFilesMenuItem.setChecked(show)
+    })
     reloadPreferences()
-
     enableShortcuts()
     sidePane.addNewTab()
 
@@ -792,14 +792,16 @@ function RootPane () {
         var notification = Notification('info', function () {
             return preferences.language.terms.COOKIES_DISABLED
         })
-        notificationBar.show(notification)
+        showNotification(notification)
     }
 
     addEventListener('beforeunload', function (e) {
-        // mozilla
-        e.preventDefault()
-        // chrome
-        return preferences.language.terms.CONFIRM_UNLOAD
+        if (sidePane.isModified()) {
+            // mozilla
+            e.preventDefault()
+            // chrome
+            return preferences.language.terms.CONFIRM_UNLOAD
+        }
     })
 
     return {
