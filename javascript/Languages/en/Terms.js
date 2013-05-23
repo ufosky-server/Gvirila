@@ -81,6 +81,7 @@ function Languages_en_Terms () {
         LINK_TO_THIS_SESSION: 'Link to this session',
         LOCAL_VERSION: 'Local version',
         LOWER_CASE: 'Lower Case',
+        MATCH_CASE: 'Match Case',
         NAME: 'Name',
         NAME_CONTAINS: 'Name contains',
         NETWORK_ERROR_OCCURED: 'A network error occured. Please, check your internet connectivity.',

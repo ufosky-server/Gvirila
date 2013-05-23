@@ -81,6 +81,7 @@ function Languages_ka_Terms () {
         LINK_TO_THIS_SESSION: 'ამ სესიის ბმული',
         LOCAL_VERSION: 'ლოკალური ვერსია',
         LOWER_CASE: 'დაბალი რეგისტრი',
+        MATCH_CASE: 'რეგისტრის დამთხვევა',
         NAME: 'სახელი',
         NAME_CONTAINS: 'სახელი შეიცავს',
         NETWORK_ERROR_OCCURED: 'ქსელის შეფერხებაა. გთხოვთ, გადაამოწმოთ თქვენი ინტერნეტკავშირი.',

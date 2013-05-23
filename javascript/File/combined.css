@@ -292,7 +292,7 @@
 }
 .File_SearchBar-textField {
     position: absolute;
-    right: 110px;
+    right: 145px;
     top: 0;
     bottom: 0;
     left: 0;
@@ -317,7 +317,7 @@
     bottom: 0;
     height: 30px;
     margin: auto;
-    width: 105px;
+    width: 140px;
 }
 .File_SearchBar-buttons > .HintToolButton {
     margin-left: 5px;

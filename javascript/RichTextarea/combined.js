@@ -137,35 +137,6 @@ function RichTextarea_CtrlBackspaceModule (richTextarea) {
         }
     })
 }
-function RichTextarea_CtrlDeleteModule (richTextarea) {
-    richTextarea.onKeyDown(function (e) {
-        if (!e.altKey && e.ctrlKey && !e.metaKey && !e.shiftKey &&
-            e.keyCode == KeyCodes.DELETE) {
-
-            var index,
-                value = richTextarea.getValue(),
-                selectionEnd = richTextarea.getSelectionEnd(),
-                selectionStart = richTextarea.getSelectionStart(),
-                selectionDirection = richTextarea.getSelectionDirection()
-
-            if (selectionDirection == 'forward' || selectionStart == selectionEnd) {
-                index = String_FindCtrlRightIndex(value, selectionEnd)
-                value = value.substr(0, selectionEnd) + value.substr(index)
-            } else {
-                index = String_FindCtrlRightIndex(value, selectionStart)
-                value = value.substr(0, selectionStart) + value.substr(index)
-                var diff = index - selectionStart
-                selectionEnd -= diff
-                if (selectionEnd < selectionStart) selectionEnd = selectionStart
-            }
-
-            richTextarea.setValue(value)
-            richTextarea.setSelectionRange(selectionStart, selectionEnd)
-            e.preventDefault()
-
-        }
-    })
-}
 function RichTextarea_CtrlDModule (richTextarea) {
     richTextarea.onKeyDown(function (e) {
         if (!e.altKey && e.ctrlKey && !e.metaKey && !e.shiftKey &&
@@ -209,6 +180,35 @@ function RichTextarea_CtrlDModule (richTextarea) {
                 trailingText = value.substr(cutEnd)
             richTextarea.setValue(leadingText + trailingText)
             richTextarea.setSelectionRange(selectionStart, selectionStart)
+            e.preventDefault()
+
+        }
+    })
+}
+function RichTextarea_CtrlDeleteModule (richTextarea) {
+    richTextarea.onKeyDown(function (e) {
+        if (!e.altKey && e.ctrlKey && !e.metaKey && !e.shiftKey &&
+            e.keyCode == KeyCodes.DELETE) {
+
+            var index,
+                value = richTextarea.getValue(),
+                selectionEnd = richTextarea.getSelectionEnd(),
+                selectionStart = richTextarea.getSelectionStart(),
+                selectionDirection = richTextarea.getSelectionDirection()
+
+            if (selectionDirection == 'forward' || selectionStart == selectionEnd) {
+                index = String_FindCtrlRightIndex(value, selectionEnd)
+                value = value.substr(0, selectionEnd) + value.substr(index)
+            } else {
+                index = String_FindCtrlRightIndex(value, selectionStart)
+                value = value.substr(0, selectionStart) + value.substr(index)
+                var diff = index - selectionStart
+                selectionEnd -= diff
+                if (selectionEnd < selectionStart) selectionEnd = selectionStart
+            }
+
+            richTextarea.setValue(value)
+            richTextarea.setSelectionRange(selectionStart, selectionEnd)
             e.preventDefault()
 
         }
@@ -1079,11 +1079,17 @@ function RichTextarea_Textarea (preferences) {
         enable: function () {
             textarea.disabled = false
         },
-        findNext: function (phrase) {
+        findNext: function (phrase, matchCase) {
+
             var value = textarea.value,
                 selectionEnd = textarea.selectionEnd
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
             if (phrase) {
-                var index = value.indexOf(phrase, textarea.selectionEnd)
+                var index = value.indexOf(phrase, selectionEnd)
                 if (index == -1) index = value.indexOf(phrase, 0)
                 if (index != -1) {
                     setSelectionRange(index, index + phrase.length)
@@ -1098,10 +1104,17 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
-        findPrev: function (phrase) {
-            var value = textarea.value,
-                index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
+        findPrev: function (phrase, matchCase) {
+
+            var value = textarea.value
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
+            var index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
             if (index == -1 || textarea.selectionStart == 0) {
                 index = value.lastIndexOf(phrase, value.length - 1)
             }
@@ -1111,6 +1124,7 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
         getLastCursorColumn: function () {
             return lastCursorColumn

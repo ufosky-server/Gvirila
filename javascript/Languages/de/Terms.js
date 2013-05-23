@@ -81,6 +81,7 @@ function Languages_de_Terms () {
         LINK_TO_THIS_SESSION: 'Link zu dieser Sitzung',
         LOCAL_VERSION: 'Lokale Version',
         LOWER_CASE: 'Kleinschreibung',
+        MATCH_CASE: 'Match Case',
         NAME: 'Name',
         NAME_CONTAINS: 'Name beinhaltet',
         NETWORK_ERROR_OCCURED: 'Ein Netzwerk Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Internetverbindung.',

@@ -222,11 +222,17 @@ function RichTextarea_Textarea (preferences) {
         enable: function () {
             textarea.disabled = false
         },
-        findNext: function (phrase) {
+        findNext: function (phrase, matchCase) {
+
             var value = textarea.value,
                 selectionEnd = textarea.selectionEnd
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
             if (phrase) {
-                var index = value.indexOf(phrase, textarea.selectionEnd)
+                var index = value.indexOf(phrase, selectionEnd)
                 if (index == -1) index = value.indexOf(phrase, 0)
                 if (index != -1) {
                     setSelectionRange(index, index + phrase.length)
@@ -241,10 +247,17 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
-        findPrev: function (phrase) {
-            var value = textarea.value,
-                index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
+        findPrev: function (phrase, matchCase) {
+
+            var value = textarea.value
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
+            var index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
             if (index == -1 || textarea.selectionStart == 0) {
                 index = value.lastIndexOf(phrase, value.length - 1)
             }
@@ -254,6 +267,7 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
         getLastCursorColumn: function () {
             return lastCursorColumn

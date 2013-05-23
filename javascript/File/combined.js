@@ -110,7 +110,7 @@ function File_File (preferences, remoteApi) {
 
     function findNext () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findNext(phrase)
+            found = richTextarea.findNext(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
@@ -118,7 +118,7 @@ function File_File (preferences, remoteApi) {
 
     function findPrev () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findPrev(phrase)
+            found = richTextarea.findPrev(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
@@ -926,14 +926,6 @@ function File_SearchBar (preferences) {
         textField.disable()
     }
 
-    function reloadPreferences () {
-        var terms = preferences.language.terms
-        textField.setLabelText(terms.SEARCH_PHRASE)
-        prevButton.setTitle(terms.FIND_PREVIOUS)
-        nextButton.setTitle(terms.FIND_NEXT)
-        closeButton.setTitle(terms.CLOSE)
-    }
-
     var textField = LeftLabelTextField()
     textField.disable()
 
@@ -950,11 +942,15 @@ function File_SearchBar (preferences) {
     nextButton.setDescription('Ctrl+G')
     nextButton.alignRight()
 
+    var matchCaseButton = ArrowUpHintToolButton(ToggleToolButton('match-case'))
+    matchCaseButton.alignRight()
+
     var closeButton = ArrowUpHintToolButton(ToolButton(Icon('close').element))
     closeButton.alignRight()
     closeButton.onClick(hide)
 
     var buttonsElement = Div(classPrefix + '-buttons')
+    buttonsElement.appendChild(matchCaseButton.element)
     buttonsElement.appendChild(prevButton.element)
     buttonsElement.appendChild(nextButton.element)
     buttonsElement.appendChild(closeButton.element)
@@ -965,16 +961,14 @@ function File_SearchBar (preferences) {
 
     var hideListeners = []
 
-    reloadPreferences()
-
     return {
         contentElement: bar.contentElement,
         element: bar.element,
         getValue: textField.getValue,
         hide: hide,
         isFocused: textField.isFocused,
+        isMatchCaseChecked: matchCaseButton.isChecked,
         isVisible: bar.isVisible,
-        reloadPreferences: reloadPreferences,
         setSearchPhrase: textField.setValue,
         onFindNext: function (listener) {
             nextButton.onClick(listener)
@@ -995,6 +989,14 @@ function File_SearchBar (preferences) {
                     hide()
                 }
             })
+        },
+        reloadPreferences: function () {
+            var terms = preferences.language.terms
+            textField.setLabelText(terms.SEARCH_PHRASE)
+            prevButton.setTitle(terms.FIND_PREVIOUS)
+            nextButton.setTitle(terms.FIND_NEXT)
+            closeButton.setTitle(terms.CLOSE)
+            matchCaseButton.setTitle(terms.MATCH_CASE)
         },
         show: function () {
             bar.show()

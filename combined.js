@@ -4572,7 +4572,7 @@ function File_File (preferences, remoteApi) {
 
     function findNext () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findNext(phrase)
+            found = richTextarea.findNext(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
@@ -4580,7 +4580,7 @@ function File_File (preferences, remoteApi) {
 
     function findPrev () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findPrev(phrase)
+            found = richTextarea.findPrev(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
@@ -5394,14 +5394,6 @@ function File_SearchBar (preferences) {
         textField.disable()
     }
 
-    function reloadPreferences () {
-        var terms = preferences.language.terms
-        textField.setLabelText(terms.SEARCH_PHRASE)
-        prevButton.setTitle(terms.FIND_PREVIOUS)
-        nextButton.setTitle(terms.FIND_NEXT)
-        closeButton.setTitle(terms.CLOSE)
-    }
-
     var textField = LeftLabelTextField()
     textField.disable()
 
@@ -5418,11 +5410,15 @@ function File_SearchBar (preferences) {
     nextButton.setDescription('Ctrl+G')
     nextButton.alignRight()
 
+    var matchCaseButton = ArrowUpHintToolButton(ToggleToolButton('match-case'))
+    matchCaseButton.alignRight()
+
     var closeButton = ArrowUpHintToolButton(ToolButton(Icon('close').element))
     closeButton.alignRight()
     closeButton.onClick(hide)
 
     var buttonsElement = Div(classPrefix + '-buttons')
+    buttonsElement.appendChild(matchCaseButton.element)
     buttonsElement.appendChild(prevButton.element)
     buttonsElement.appendChild(nextButton.element)
     buttonsElement.appendChild(closeButton.element)
@@ -5433,16 +5429,14 @@ function File_SearchBar (preferences) {
 
     var hideListeners = []
 
-    reloadPreferences()
-
     return {
         contentElement: bar.contentElement,
         element: bar.element,
         getValue: textField.getValue,
         hide: hide,
         isFocused: textField.isFocused,
+        isMatchCaseChecked: matchCaseButton.isChecked,
         isVisible: bar.isVisible,
-        reloadPreferences: reloadPreferences,
         setSearchPhrase: textField.setValue,
         onFindNext: function (listener) {
             nextButton.onClick(listener)
@@ -5463,6 +5457,14 @@ function File_SearchBar (preferences) {
                     hide()
                 }
             })
+        },
+        reloadPreferences: function () {
+            var terms = preferences.language.terms
+            textField.setLabelText(terms.SEARCH_PHRASE)
+            prevButton.setTitle(terms.FIND_PREVIOUS)
+            nextButton.setTitle(terms.FIND_NEXT)
+            closeButton.setTitle(terms.CLOSE)
+            matchCaseButton.setTitle(terms.MATCH_CASE)
         },
         show: function () {
             bar.show()
@@ -8846,11 +8848,17 @@ function RichTextarea_Textarea (preferences) {
         enable: function () {
             textarea.disabled = false
         },
-        findNext: function (phrase) {
+        findNext: function (phrase, matchCase) {
+
             var value = textarea.value,
                 selectionEnd = textarea.selectionEnd
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
             if (phrase) {
-                var index = value.indexOf(phrase, textarea.selectionEnd)
+                var index = value.indexOf(phrase, selectionEnd)
                 if (index == -1) index = value.indexOf(phrase, 0)
                 if (index != -1) {
                     setSelectionRange(index, index + phrase.length)
@@ -8865,10 +8873,17 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
-        findPrev: function (phrase) {
-            var value = textarea.value,
-                index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
+        findPrev: function (phrase, matchCase) {
+
+            var value = textarea.value
+            if (!matchCase) {
+                value = value.toLowerCase()
+                phrase = phrase.toLowerCase()
+            }
+
+            var index = value.lastIndexOf(phrase, textarea.selectionStart - 1)
             if (index == -1 || textarea.selectionStart == 0) {
                 index = value.lastIndexOf(phrase, value.length - 1)
             }
@@ -8878,6 +8893,7 @@ function RichTextarea_Textarea (preferences) {
                 return true
             }
             return false
+
         },
         getLastCursorColumn: function () {
             return lastCursorColumn
@@ -9301,6 +9317,7 @@ function Languages_de_Terms () {
         LINK_TO_THIS_SESSION: 'Link zu dieser Sitzung',
         LOCAL_VERSION: 'Lokale Version',
         LOWER_CASE: 'Kleinschreibung',
+        MATCH_CASE: 'Match Case',
         NAME: 'Name',
         NAME_CONTAINS: 'Name beinhaltet',
         NETWORK_ERROR_OCCURED: 'Ein Netzwerk Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Internetverbindung.',
@@ -9457,6 +9474,7 @@ function Languages_en_Terms () {
         LINK_TO_THIS_SESSION: 'Link to this session',
         LOCAL_VERSION: 'Local version',
         LOWER_CASE: 'Lower Case',
+        MATCH_CASE: 'Match Case',
         NAME: 'Name',
         NAME_CONTAINS: 'Name contains',
         NETWORK_ERROR_OCCURED: 'A network error occured. Please, check your internet connectivity.',
@@ -9613,6 +9631,7 @@ function Languages_ka_Terms () {
         LINK_TO_THIS_SESSION: 'ამ სესიის ბმული',
         LOCAL_VERSION: 'ლოკალური ვერსია',
         LOWER_CASE: 'დაბალი რეგისტრი',
+        MATCH_CASE: 'რეგისტრის დამთხვევა',
         NAME: 'სახელი',
         NAME_CONTAINS: 'სახელი შეიცავს',
         NETWORK_ERROR_OCCURED: 'ქსელის შეფერხებაა. გთხოვთ, გადაამოწმოთ თქვენი ინტერნეტკავშირი.',

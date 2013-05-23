@@ -12,7 +12,7 @@ function File_File (preferences, remoteApi) {
 
     function findNext () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findNext(phrase)
+            found = richTextarea.findNext(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
@@ -20,7 +20,7 @@ function File_File (preferences, remoteApi) {
 
     function findPrev () {
         var phrase = searchBar.getValue(),
-            found = richTextarea.findPrev(phrase)
+            found = richTextarea.findPrev(phrase, searchBar.isMatchCaseChecked())
         if (!found) {
             showNotFound(phrase)
         }
