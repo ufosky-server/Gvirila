@@ -150,11 +150,24 @@ function FileTabs_ScrollBar () {
 }
 function FileTabs_Tab (file, preferences) {
 
+    function close () {
+        if (isModified()) {
+            ArrayCall(closingListeners)
+        } else {
+            ArrayCall(closeListeners)
+        }
+    }
+
+    function isModified () {
+        return originalContent != file.getContent()
+    }
+
     function setVisualTitle (title) {
         textNode.nodeValue = title
     }
 
     var closeButton = ToolButton(Icon('close').element)
+    closeButton.onClick(close)
 
     var classPrefix = 'FileTabs_Tab'
 
@@ -183,6 +196,9 @@ function FileTabs_Tab (file, preferences) {
     element.appendChild(wrapperElement)
     element.addEventListener('click', function () {
         ArrayCall(selectListeners)
+    })
+    element.addEventListener('mousedown', function (e) {
+        if (e.button == 1) close()
     })
 
     var loadingIcon
@@ -214,7 +230,9 @@ function FileTabs_Tab (file, preferences) {
         loadingIcon = null
     })
 
-    var selectListeners = []
+    var closeListeners = [],
+        closingListeners = [],
+        selectListeners = []
 
     var untitled = false,
         untitledIndex
@@ -233,6 +251,7 @@ function FileTabs_Tab (file, preferences) {
         forRichTextarea: file.forRichTextarea,
         getContent: file.getContent,
         getSelectedText: file.getSelectedText,
+        isModified: isModified,
         keyDown: file.keyDown,
         loadContent: file.loadContent,
         loadLocalFile: file.loadLocalFile,
@@ -257,14 +276,11 @@ function FileTabs_Tab (file, preferences) {
         hasPath: function () {
             return !!file.getPath()
         },
-        isModified: function () {
-            return originalContent != file.getContent()
-        },
         onClose: function (listener) {
-            closeButton.onClick(listener)
-            element.addEventListener('mousedown', function (e) {
-                if (e.button == 1) listener()
-            })
+            closeListeners.push(listener)
+        },
+        onClosing: function (listener) {
+            closingListeners.push(listener)
         },
         onSelect: function (listener) {
             selectListeners.push(listener)

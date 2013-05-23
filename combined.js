@@ -2719,6 +2719,10 @@ function RootPane () {
         preferences.save()
     }
 
+    function showSaveChangesConfirmDialog () {
+        showDialog(saveChangesConfirmDialog)
+    }
+
     function showSaveFileDialog () {
         showDialog(saveFileDialog)
         saveFileDialog.setFileTab(sidePane.getActiveTab(), sidePane.getPath())
@@ -2733,25 +2737,18 @@ function RootPane () {
     var languages = Languages()
 
     var preferences = Preferences(languages)
+    preferences.onChange(reloadPreferences)
 
     var menuBar = MenuBar_Bar(),
         dialogContainer = menuBar.element
 
     var remoteApi = AwakeRemoteAPI()
 
-    var saveFileDialog = SaveFileDialog(dialogContainer, preferences, remoteApi)
-    saveFileDialog.onFolderChange(function (path) {
-        // if a new file was saved in the current directory
-        // then refresh file list
-        if (path == sidePane.getPath()) {
-            sidePane.reloadFolder()
-        }
-    })
-
     var sidePane = SidePane(dialogContainer, preferences, remoteApi)
     sidePane.setPaneVisible(preferences.showSidePane)
     sidePane.onDialogShow(disableShortcuts)
     sidePane.onDialogHide(enableShortcuts)
+    sidePane.onClosingTab(showSaveChangesConfirmDialog)
     sidePane.onStateChange(function () {
         newFolderMenuItem.setEnabled(sidePane.canCreateFolder())
         newNetworkFolderMenuItem.setEnabled(sidePane.canCreateNetworkFolder())
@@ -2821,9 +2818,6 @@ function RootPane () {
         }
     })
 
-    var openFileDialog = OpenFileDialog(dialogContainer, preferences, remoteApi)
-    openFileDialog.onFileSelect(sidePane.openFile)
-
     var newFileMenuItem = Menu_Item('Ctrl+N')
     newFileMenuItem.setIconName('new-file')
     newFileMenuItem.onClick(sidePane.addNewTab)
@@ -2878,7 +2872,7 @@ function RootPane () {
     var closeMenuItem = Menu_Item('Ctrl+W')
     closeMenuItem.onClick(function () {
         if (!sidePane.closeActiveTab()) {
-            showDialog(saveChangesConfirmDialog)
+            showSaveChangesConfirmDialog()
         }
     })
 
@@ -3111,16 +3105,18 @@ function RootPane () {
     var notificationBar = NotificationBar()
     notificationBar.contentElement.appendChild(menuBar.element)
 
+    var showNotification = notificationBar.show
+
     var changeCaseModifier = Modifiers_ChangeCase()
 
     var encodeBase64Modifier = Modifiers_EncodeBase64(preferences)
-    encodeBase64Modifier.onNotification(notificationBar.show)
+    encodeBase64Modifier.onNotification(showNotification)
 
     var encodeHexModifier = Modifiers_EncodeHex(preferences)
-    encodeHexModifier.onNotification(notificationBar.show)
+    encodeHexModifier.onNotification(showNotification)
 
     var exportSessionDialog = ExportSessionDialog(dialogContainer, preferences, remoteApi)
-    exportSessionDialog.onNotification(notificationBar.show)
+    exportSessionDialog.onNotification(showNotification)
 
     var exportSessionMenuItem = Menu_Item()
     exportSessionMenuItem.setIconName('export')
@@ -3130,7 +3126,7 @@ function RootPane () {
 
     var importSessionDialog = ImportSessionDialog(dialogContainer, preferences, remoteApi)
     importSessionDialog.onImport(sidePane.reloadFolder)
-    importSessionDialog.onNotification(notificationBar.show)
+    importSessionDialog.onNotification(showNotification)
 
     var importSessionMenuItem = Menu_Item()
     importSessionMenuItem.setIconName('import')
@@ -3213,14 +3209,19 @@ function RootPane () {
     menuBar.addItem(helpMenuBarItem)
     menuBar.contentElement.appendChild(toolBar.element)
 
-    sidePane.onNotification(notificationBar.show)
-    sidePane.onHiddenFilesShow(function (show) {
-        showHiddenFiles(show)
-        hiddenFilesMenuItem.setChecked(show)
+    var openFileDialog = OpenFileDialog(dialogContainer, preferences, remoteApi)
+    openFileDialog.onFileSelect(sidePane.openFile)
+    openFileDialog.onNotification(showNotification)
+
+    var saveFileDialog = SaveFileDialog(dialogContainer, preferences, remoteApi)
+    saveFileDialog.onNotification(showNotification)
+    saveFileDialog.onFolderChange(function (path) {
+        // if a new file was saved in the current directory
+        // then refresh file list
+        if (path == sidePane.getPath()) {
+            sidePane.reloadFolder()
+        }
     })
-    openFileDialog.onNotification(notificationBar.show)
-    saveFileDialog.onNotification(notificationBar.show)
-    sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
 
     var element = AbsoluteDiv('RootPane')
     element.style.backgroundImage = 'url(images/background.png)'
@@ -3241,9 +3242,13 @@ function RootPane () {
         }
     })
 
-    preferences.onChange(reloadPreferences)
+    sidePane.onNotification(showNotification)
+    sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
+    sidePane.onHiddenFilesShow(function (show) {
+        showHiddenFiles(show)
+        hiddenFilesMenuItem.setChecked(show)
+    })
     reloadPreferences()
-
     enableShortcuts()
     sidePane.addNewTab()
 
@@ -3253,14 +3258,16 @@ function RootPane () {
         var notification = Notification('info', function () {
             return preferences.language.terms.COOKIES_DISABLED
         })
-        notificationBar.show(notification)
+        showNotification(notification)
     }
 
     addEventListener('beforeunload', function (e) {
-        // mozilla
-        e.preventDefault()
-        // chrome
-        return preferences.language.terms.CONFIRM_UNLOAD
+        if (sidePane.isModified()) {
+            // mozilla
+            e.preventDefault()
+            // chrome
+            return preferences.language.terms.CONFIRM_UNLOAD
+        }
     })
 
     return {
@@ -3650,18 +3657,26 @@ function SidePane (dialogContainer, preferences, remoteApi) {
 
     function addNewTab () {
         var file = File_File(preferences, remoteApi)
-        var tab = FileTabs_Tab(file, preferences)
+        var tab = createTab(file)
         tab.setUntitledIndex(untitledIndex)
         tab.reloadPreferences()
         addTab(tab)
         untitledIndex++
     }
 
+    function createTab (file) {
+        var tab = FileTabs_Tab(file, preferences)
+        tab.onClosing(function () {
+            ArrayCall(closingTabListeners, tab)
+        })
+        return tab
+    }
+
     function getReusableTab () {
         var tab = fileTabs.getActiveTab()
         if (!tab || tab.hasPath() || tab.getContent()) {
             var file = File_File(preferences, remoteApi)
-            tab = FileTabs_Tab(file, preferences)
+            tab = createTab(file)
             addTab(tab)
         }
         return tab
@@ -3699,7 +3714,8 @@ function SidePane (dialogContainer, preferences, remoteApi) {
     element.appendChild(contentElement)
     element.appendChild(paneContent)
 
-    var tabAddListeners = []
+    var closingTabListeners = [],
+        tabAddListeners = []
 
     var untitledIndex = 1
 
@@ -3735,6 +3751,7 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         forRichTextarea: fileTabs.forRichTextarea,
         getActiveTab: fileTabs.getActiveTab,
         getPath: fileList.getPath,
+        isModified: fileTabs.isModified,
         onCanDeleteText: fileTabs.onCanDeleteText,
         onCanUndoRedo: fileTabs.onCanUndoRedo,
         onDialogHide: fileList.onDialogHide,
@@ -3777,6 +3794,9 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         onNotification: function (listener) {
             fileList.onNotification(listener)
             fileTabs.onNotification(listener)
+        },
+        onClosingTab: function (listener) {
+            closingTabListeners.push(listener)
         },
         onTabAdd: function (listener) {
             tabAddListeners.push(listener)
@@ -6615,11 +6635,24 @@ function FileTabs_ScrollBarArrow (className) {
 ;
 function FileTabs_Tab (file, preferences) {
 
+    function close () {
+        if (isModified()) {
+            ArrayCall(closingListeners)
+        } else {
+            ArrayCall(closeListeners)
+        }
+    }
+
+    function isModified () {
+        return originalContent != file.getContent()
+    }
+
     function setVisualTitle (title) {
         textNode.nodeValue = title
     }
 
     var closeButton = ToolButton(Icon('close').element)
+    closeButton.onClick(close)
 
     var classPrefix = 'FileTabs_Tab'
 
@@ -6648,6 +6681,9 @@ function FileTabs_Tab (file, preferences) {
     element.appendChild(wrapperElement)
     element.addEventListener('click', function () {
         ArrayCall(selectListeners)
+    })
+    element.addEventListener('mousedown', function (e) {
+        if (e.button == 1) close()
     })
 
     var loadingIcon
@@ -6679,7 +6715,9 @@ function FileTabs_Tab (file, preferences) {
         loadingIcon = null
     })
 
-    var selectListeners = []
+    var closeListeners = [],
+        closingListeners = [],
+        selectListeners = []
 
     var untitled = false,
         untitledIndex
@@ -6698,6 +6736,7 @@ function FileTabs_Tab (file, preferences) {
         forRichTextarea: file.forRichTextarea,
         getContent: file.getContent,
         getSelectedText: file.getSelectedText,
+        isModified: isModified,
         keyDown: file.keyDown,
         loadContent: file.loadContent,
         loadLocalFile: file.loadLocalFile,
@@ -6722,14 +6761,11 @@ function FileTabs_Tab (file, preferences) {
         hasPath: function () {
             return !!file.getPath()
         },
-        isModified: function () {
-            return originalContent != file.getContent()
-        },
         onClose: function (listener) {
-            closeButton.onClick(listener)
-            element.addEventListener('mousedown', function (e) {
-                if (e.button == 1) listener()
-            })
+            closeListeners.push(listener)
+        },
+        onClosing: function (listener) {
+            closingListeners.push(listener)
         },
         onSelect: function (listener) {
             selectListeners.push(listener)
@@ -6974,6 +7010,12 @@ function FileTabs_Tabs () {
         },
         getActiveTab: function () {
             return activeTab
+        },
+        isModified: function () {
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].isModified()) return true
+            }
+            return false
         },
         keyDown: function (e) {
             if (activeTab) {

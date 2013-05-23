@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule run/(.*) api/get-item.php?path=$1
+</IfModule>

@@ -7,18 +7,26 @@ function SidePane (dialogContainer, preferences, remoteApi) {
 
     function addNewTab () {
         var file = File_File(preferences, remoteApi)
-        var tab = FileTabs_Tab(file, preferences)
+        var tab = createTab(file)
         tab.setUntitledIndex(untitledIndex)
         tab.reloadPreferences()
         addTab(tab)
         untitledIndex++
     }
 
+    function createTab (file) {
+        var tab = FileTabs_Tab(file, preferences)
+        tab.onClosing(function () {
+            ArrayCall(closingTabListeners, tab)
+        })
+        return tab
+    }
+
     function getReusableTab () {
         var tab = fileTabs.getActiveTab()
         if (!tab || tab.hasPath() || tab.getContent()) {
             var file = File_File(preferences, remoteApi)
-            tab = FileTabs_Tab(file, preferences)
+            tab = createTab(file)
             addTab(tab)
         }
         return tab
@@ -56,7 +64,8 @@ function SidePane (dialogContainer, preferences, remoteApi) {
     element.appendChild(contentElement)
     element.appendChild(paneContent)
 
-    var tabAddListeners = []
+    var closingTabListeners = [],
+        tabAddListeners = []
 
     var untitledIndex = 1
 
@@ -135,6 +144,9 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         onNotification: function (listener) {
             fileList.onNotification(listener)
             fileTabs.onNotification(listener)
+        },
+        onClosingTab: function (listener) {
+            closingTabListeners.push(listener)
         },
         onTabAdd: function (listener) {
             tabAddListeners.push(listener)

@@ -258,6 +258,10 @@ function RootPane () {
         preferences.save()
     }
 
+    function showSaveChangesConfirmDialog () {
+        showDialog(saveChangesConfirmDialog)
+    }
+
     function showSaveFileDialog () {
         showDialog(saveFileDialog)
         saveFileDialog.setFileTab(sidePane.getActiveTab(), sidePane.getPath())
@@ -283,6 +287,7 @@ function RootPane () {
     sidePane.setPaneVisible(preferences.showSidePane)
     sidePane.onDialogShow(disableShortcuts)
     sidePane.onDialogHide(enableShortcuts)
+    sidePane.onClosingTab(showSaveChangesConfirmDialog)
     sidePane.onStateChange(function () {
         newFolderMenuItem.setEnabled(sidePane.canCreateFolder())
         newNetworkFolderMenuItem.setEnabled(sidePane.canCreateNetworkFolder())
@@ -406,7 +411,7 @@ function RootPane () {
     var closeMenuItem = Menu_Item('Ctrl+W')
     closeMenuItem.onClick(function () {
         if (!sidePane.closeActiveTab()) {
-            showDialog(saveChangesConfirmDialog)
+            showSaveChangesConfirmDialog()
         }
     })
 
