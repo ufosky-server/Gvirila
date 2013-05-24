@@ -109,7 +109,7 @@ function Languages_de_Terms () {
         RENAME: 'Rename',
         RENAMING: 'Renaming\u2026',
         REPLACE: 'Ersetzen',
-        REPLACE_ALL: 'Alle ersetzen',
+        REPLACE_ALL: 'Alle',
         REPLACE_PHRASE: 'Ersetzen mit',
         RESET: 'Zurücksetzen',
         RESET_SESSION: 'Sitzung zurücksetzen',

@@ -16,9 +16,11 @@ function File_ReplaceBar (preferences) {
     textFieldElement.appendChild(textField.element)
 
     var replaceButton = Button()
+    replaceButton.addClass(classPrefix + '-replaceButton')
     replaceButton.disable()
 
     var replaceAllButton = Button()
+    replaceAllButton.addClass(classPrefix + '-replaceAllButton')
     replaceAllButton.disable()
 
     var buttonsElement = Div(classPrefix + '-buttons')

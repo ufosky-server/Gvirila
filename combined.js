@@ -5345,9 +5345,11 @@ function File_ReplaceBar (preferences) {
     textFieldElement.appendChild(textField.element)
 
     var replaceButton = Button()
+    replaceButton.addClass(classPrefix + '-replaceButton')
     replaceButton.disable()
 
     var replaceAllButton = Button()
+    replaceAllButton.addClass(classPrefix + '-replaceAllButton')
     replaceAllButton.disable()
 
     var buttonsElement = Div(classPrefix + '-buttons')
@@ -9350,7 +9352,7 @@ function Languages_de_Terms () {
         RENAME: 'Rename',
         RENAMING: 'Renaming\u2026',
         REPLACE: 'Ersetzen',
-        REPLACE_ALL: 'Alle ersetzen',
+        REPLACE_ALL: 'Alle',
         REPLACE_PHRASE: 'Ersetzen mit',
         RESET: 'Zurücksetzen',
         RESET_SESSION: 'Sitzung zurücksetzen',
@@ -9507,7 +9509,7 @@ function Languages_en_Terms () {
         RENAME: 'Rename',
         RENAMING: 'Renaming\u2026',
         REPLACE: 'Replace',
-        REPLACE_ALL: 'Replace All',
+        REPLACE_ALL: 'All',
         REPLACE_PHRASE: 'Replace with',
         RESET: 'Reset',
         RESET_SESSION: 'Reset Session',

@@ -7,7 +7,7 @@
 
 .File_ReplaceBar-textField {
     position: absolute;
-    right: 195px;
+    right: 170px;
     top: 0;
     left: 0;
     height: 30px;
@@ -26,11 +26,17 @@
     position: absolute;
     top: 0;
     right: 5px;
-    width: 190px;
+    width: 165px;
     margin: auto;
 }
-.File_ReplaceBar-buttons .Button {
+
+.File_ReplaceBar-replaceButton {
     vertical-align: top;
-    width: 90px;
+    width: 95px;
+}
+
+.File_ReplaceBar-replaceAllButton {
+    vertical-align: top;
+    width: 60px;
     margin-left: 5px;
 }
