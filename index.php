@@ -11,7 +11,7 @@ $head =
     .'}'
     .'</style>';
 
-$body = '<script type="text/javascript" src="compressed.js?17"></script>';
+$body = '<script type="text/javascript" src="compressed.js?18"></script>';
 
 include_once 'fns/echo_page.php';
 echo_page($body, $head);

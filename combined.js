@@ -9058,7 +9058,7 @@ function String_FindCtrlDownIndex (string, cursorIndex) {
 ;
 function String_FindCtrlLeftIndex (string, cursorIndex) {
     var leadingValue = string.substr(0, cursorIndex)
-    cursorIndex -= leadingValue.match(/\w*\W*$/)[0].length
+    cursorIndex -= leadingValue.match(/[\wა-ჰ]*[^\wა-ჰ]*$/)[0].length
     return cursorIndex
 }
 ;
@@ -9075,7 +9075,7 @@ function String_FindCtrlLeftSquareBracketIndex (string, cursorIndex) {
 ;
 function String_FindCtrlRightIndex (string, cursorIndex) {
     var trailingValue = string.substr(cursorIndex)
-    cursorIndex += trailingValue.match(/^\W*\w*/)[0].length
+    cursorIndex += trailingValue.match(/^[^\wა-ჰ]*[\wა-ჰ]*/)[0].length
     return cursorIndex
 }
 ;
