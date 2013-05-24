@@ -158,6 +158,10 @@ function FileTabs_Tab (file, preferences) {
         }
     }
 
+    function emitSelect () {
+        ArrayCall(selectListeners)
+    }
+
     function isModified () {
         return originalContent != file.getContent()
     }
@@ -194,11 +198,12 @@ function FileTabs_Tab (file, preferences) {
 
     var element = Div(classPrefix)
     element.appendChild(wrapperElement)
-    element.addEventListener('click', function () {
-        ArrayCall(selectListeners)
-    })
+    element.addEventListener('click', emitSelect)
     element.addEventListener('mousedown', function (e) {
-        if (e.button == 1) close()
+        if (e.button == 1) {
+            emitSelect()
+            close()
+        }
     })
 
     var loadingIcon
