@@ -3775,6 +3775,8 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         forRichTextarea: fileTabs.forRichTextarea,
         getActiveTab: fileTabs.getActiveTab,
         getPath: fileList.getPath,
+        gotoNextBookmark: fileTabs.gotoNextBookmark,
+        gotoPrevBookmark: fileTabs.gotoPrevBookmark,
         isModified: fileTabs.isModified,
         onCanDeleteText: fileTabs.onCanDeleteText,
         onCanUndoRedo: fileTabs.onCanUndoRedo,
@@ -3803,8 +3805,6 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         showSearchBar: fileTabs.showSearchBar,
         showSearchFilesDialog: fileList.showSearchFilesDialog,
         toggleBookmark: fileTabs.toggleBookmark,
-        gotoNextBookmark: fileTabs.gotoNextBookmark,
-        gotoPrevBookmark: fileTabs.gotoPrevBookmark,
         addLocalFileTab: function (localFile) {
             var tab = getReusableTab()
             tab.reloadPreferences()
