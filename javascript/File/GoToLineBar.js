@@ -4,7 +4,7 @@ function File_GoToLineBar (preferences) {
         var value = textField.getValue()
         if (value.match(/^\d+$/)) {
             hide()
-            ArrayCall(goListeners, value)
+            ArrayCall(goListeners, value - 1)
         }
     }
 

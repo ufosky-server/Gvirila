@@ -1125,6 +1125,9 @@ function RichTextarea_Textarea (preferences) {
             return false
 
         },
+        getCursorLine: function () {
+            return cursorLine
+        },
         getLastCursorColumn: function () {
             return lastCursorColumn
         },
@@ -1158,7 +1161,7 @@ function RichTextarea_Textarea (preferences) {
         goToLine: function (line) {
             var index = 0,
                 value = textarea.value
-            for (var i = 0; i < line - 1; i++) {
+            for (var i = 0; i < line; i++) {
                 var newIndex = value.indexOf('\n', index)
                 if (newIndex == -1) break
                 index = newIndex + 1

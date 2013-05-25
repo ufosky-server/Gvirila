@@ -106,6 +106,8 @@ function FileTabs_Tab (file, preferences) {
         forRichTextarea: file.forRichTextarea,
         getContent: file.getContent,
         getSelectedText: file.getSelectedText,
+        gotoNextBookmark: file.gotoNextBookmark,
+        gotoPrevBookmark: file.gotoPrevBookmark,
         isModified: isModified,
         keyDown: file.keyDown,
         loadContent: file.loadContent,
@@ -122,6 +124,7 @@ function FileTabs_Tab (file, preferences) {
         showGoToLineBar: file.showGoToLineBar,
         showReplaceBar: file.showReplaceBar,
         showSearchBar: file.showSearchBar,
+        toggleBookmark: file.toggleBookmark,
         getFile: function () {
             return file
         },

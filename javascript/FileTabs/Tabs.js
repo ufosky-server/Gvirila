@@ -199,6 +199,12 @@ function FileTabs_Tabs () {
         getActiveTab: function () {
             return activeTab
         },
+        gotoNextBookmark: function () {
+            activeTab.gotoNextBookmark()
+        },
+        gotoPrevBookmark: function () {
+            activeTab.gotoPrevBookmark()
+        },
         isModified: function () {
             for (var i = 0; i < items.length; i++) {
                 if (items[i].isModified()) return true
@@ -278,6 +284,9 @@ function FileTabs_Tabs () {
         },
         showSearchBar: function () {
             activeTab.showSearchBar()
+        },
+        toggleBookmark: function () {
+            activeTab.toggleBookmark()
         },
     }
 

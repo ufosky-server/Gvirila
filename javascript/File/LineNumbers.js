@@ -1,5 +1,25 @@
 function File_LineNumbers (preferences) {
 
+    function findNextBookmarkLine (cursorLine) {
+        var numbers = numbersElement.childNodes
+        for (var i = cursorLine; i < numbers.length; i++) {
+            if (numbers[i].classList.contains('bookmarked')) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    function findPrevBookmarkLine (cursorLine) {
+        var numbers = numbersElement.childNodes
+        for (var i = cursorLine; i >= 0; i--) {
+            if (numbers[i].classList.contains('bookmarked')) {
+                return i
+            }
+        }
+        return -1
+    }
+
     function hide () {
         element.classList.add('hidden')
     }
@@ -43,6 +63,20 @@ function File_LineNumbers (preferences) {
         reloadPreferences: function () {
             setVisible(preferences.showLineNumbers)
         },
+        getNextBookmarkLine: function (cursorLine) {
+            var index = findNextBookmarkLine(cursorLine + 1)
+            if (index == -1) {
+                index = findNextBookmarkLine(0)
+            }
+            return index
+        },
+        getPrevBookmarkLine: function (cursorLine) {
+            var index = findPrevBookmarkLine(cursorLine - 1)
+            if (index == -1) {
+                index = findPrevBookmarkLine(numbersElement.childNodes.length - 1)
+            }
+            return index
+        },
         setCursorLine: function (n) {
             lineElement.style.top = n * 16 + 'px'
             if (currentNumberElement) {
@@ -64,6 +98,14 @@ function File_LineNumbers (preferences) {
         },
         setScrollTop: function (scrollTop) {
             scrollElement.style.top = -scrollTop + 'px'
+        },
+        toggleBookmark: function (lineNumber) {
+            var bookmarkedNumber = numbersElement.childNodes[lineNumber]
+            if (bookmarkedNumber.classList.contains('bookmarked')) {
+                bookmarkedNumber.classList.remove('bookmarked')
+            } else {
+                bookmarkedNumber.classList.add('bookmarked')
+            }
         },
     }
 

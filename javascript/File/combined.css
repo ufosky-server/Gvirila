@@ -141,12 +141,15 @@
 .File_LineNumbers-number {
     font-family: monospace;
     text-align: right;
-    margin-right: 1px;
+    padding-right: 1px;
     overflow: hidden;
     color: #777770;
 }
 .File_LineNumbers-number.current {
     font-weight: bold;
+}
+.File_LineNumbers-number.bookmarked {
+    background: #c7e790;
 }
 
 .File_LineNumbers-line {

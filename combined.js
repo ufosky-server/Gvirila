@@ -1224,6 +1224,7 @@ var KeyCodes = {
     F9: 120,
     F10: 121,
     A: 'A'.charCodeAt(0),
+    B: 'B'.charCodeAt(0),
     D: 'D'.charCodeAt(0),
     E: 'E'.charCodeAt(0),
     F: 'F'.charCodeAt(0),
@@ -2493,11 +2494,17 @@ function RootPane () {
                         } else if (keyCode == KeyCodes.PAGE_DOWN) {
                             // CTRL+ALT+PAGE_DOWN
                             clickMenuItem(e, nextDocumentMenuItem)
+                        } else if (keyCode == KeyCodes.B) {
+                            // CTRL+ALT+B
+                            clickMenuItem(e, toggleBookmarkMenuItem)
                         }
                     }
                 } else {
                     if (e.shiftKey) {
-                        if (keyCode == KeyCodes.G) {
+                        if (keyCode == KeyCodes.B) {
+                            // SHIFT+CTRL+B
+                            clickMenuItem(e, prevBookmarkMenuItem)
+                        } else if (keyCode == KeyCodes.G) {
                             // SHIFT+CTRL+G
                             clickMenuItem(e, findPrevMenuItem)
                         } else if (keyCode == KeyCodes.L) {
@@ -2520,6 +2527,9 @@ function RootPane () {
                         if (keyCode == KeyCodes.A) {
                             // CTRL+A
                             if (sidePane.select()) e.preventDefault()
+                        } else if (keyCode == KeyCodes.B) {
+                            // CTRL+B
+                            clickMenuItem(e, nextBookmarkMenuItem)
                         } else if (keyCode == KeyCodes.F) {
                             // CTRL+F
                             clickMenuItem(e, findMenuItem)
@@ -2640,6 +2650,9 @@ function RootPane () {
         redoMenuItem.setText(terms.REDO)
         deleteMenuItem.setText(terms.DELETE)
         selectAllMenuItem.setText(terms.SELECT_ALL)
+        toggleBookmarkMenuItem.setText(terms.TOGGLE_BOOKMARK)
+        prevBookmarkMenuItem.setText(terms.GOTO_PREVIOUS_BOOKMARK)
+        nextBookmarkMenuItem.setText(terms.GOTO_NEXT_BOOKMARK)
         preferencesMenuItem.setText(terms.PREFERENCES)
         upperCaseMenuItem.setText(terms.UPPER_CASE)
         lowerCaseMenuItem.setText(terms.LOWER_CASE)
@@ -2761,6 +2774,9 @@ function RootPane () {
         revertFileMenuItem.enable()
         closeMenuItem.enable()
         selectAllMenuItem.enable()
+        toggleBookmarkMenuItem.enable()
+        prevBookmarkMenuItem.enable()
+        nextBookmarkMenuItem.enable()
         saveAllMenuItem.enable()
         closeAllMenuItem.enable()
         findMenuItem.enable()
@@ -2793,6 +2809,9 @@ function RootPane () {
                 revertFileMenuItem.disable()
                 closeMenuItem.disable()
                 selectAllMenuItem.disable()
+                toggleBookmarkMenuItem.disable()
+                prevBookmarkMenuItem.disable()
+                nextBookmarkMenuItem.disable()
                 saveAllMenuItem.disable()
                 closeAllMenuItem.disable()
                 findMenuItem.disable()
@@ -2930,6 +2949,15 @@ function RootPane () {
     changeCaseMenuGroup.addItem(lowerCaseMenuItem)
     changeCaseMenuGroup.addItem(invertCaseMenuItem)
 
+    var toggleBookmarkMenuItem = Menu_Item('Ctrl+Alt+B')
+    toggleBookmarkMenuItem.onClick(sidePane.toggleBookmark)
+
+    var prevBookmarkMenuItem = Menu_Item('Shift+Ctrl+B')
+    prevBookmarkMenuItem.onClick(sidePane.gotoPrevBookmark)
+
+    var nextBookmarkMenuItem = Menu_Item('Ctrl+B')
+    nextBookmarkMenuItem.onClick(sidePane.gotoNextBookmark)
+
     var editMenuBarItem = MenuBar_Item()
     editMenuBarItem.addItem(undoMenuItem)
     editMenuBarItem.addItem(redoMenuItem)
@@ -2938,6 +2966,10 @@ function RootPane () {
     editMenuBarItem.addItem(selectAllMenuItem)
     editMenuBarItem.addSeparator()
     editMenuBarItem.addItem(changeCaseMenuGroup)
+    editMenuBarItem.addSeparator()
+    editMenuBarItem.addItem(toggleBookmarkMenuItem)
+    editMenuBarItem.addItem(prevBookmarkMenuItem)
+    editMenuBarItem.addItem(nextBookmarkMenuItem)
     editMenuBarItem.addSeparator()
     editMenuBarItem.addItem(preferencesMenuItem)
 
@@ -3770,6 +3802,9 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         showReplaceBar: fileTabs.showReplaceBar,
         showSearchBar: fileTabs.showSearchBar,
         showSearchFilesDialog: fileList.showSearchFilesDialog,
+        toggleBookmark: fileTabs.toggleBookmark,
+        gotoNextBookmark: fileTabs.gotoNextBookmark,
+        gotoPrevBookmark: fileTabs.gotoPrevBookmark,
         addLocalFileTab: function (localFile) {
             var tab = getReusableTab()
             tab.reloadPreferences()
@@ -4879,6 +4914,20 @@ function File_File (preferences, remoteApi) {
         getPath: function () {
             return path
         },
+        gotoNextBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            var newCursorLine = lineNumbers.getNextBookmarkLine(cursorLine)
+            if (newCursorLine != -1) {
+                richTextarea.goToLine(newCursorLine)
+            }
+        },
+        gotoPrevBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            var newCursorLine = lineNumbers.getPrevBookmarkLine(cursorLine)
+            if (newCursorLine != -1) {
+                richTextarea.goToLine(newCursorLine)
+            }
+        },
         keyDown: function (e) {
             if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
                 if (e.keyCode == KeyCodes.ESC) {
@@ -4974,6 +5023,10 @@ function File_File (preferences, remoteApi) {
             showSearchBar()
             replaceBar.show()
         },
+        toggleBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            lineNumbers.toggleBookmark(cursorLine)
+        },
     }
 
 }
@@ -4984,7 +5037,7 @@ function File_GoToLineBar (preferences) {
         var value = textField.getValue()
         if (value.match(/^\d+$/)) {
             hide()
-            ArrayCall(goListeners, value)
+            ArrayCall(goListeners, value - 1)
         }
     }
 
@@ -5056,6 +5109,26 @@ function File_GoToLineBar (preferences) {
 ;
 function File_LineNumbers (preferences) {
 
+    function findNextBookmarkLine (cursorLine) {
+        var numbers = numbersElement.childNodes
+        for (var i = cursorLine; i < numbers.length; i++) {
+            if (numbers[i].classList.contains('bookmarked')) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    function findPrevBookmarkLine (cursorLine) {
+        var numbers = numbersElement.childNodes
+        for (var i = cursorLine; i >= 0; i--) {
+            if (numbers[i].classList.contains('bookmarked')) {
+                return i
+            }
+        }
+        return -1
+    }
+
     function hide () {
         element.classList.add('hidden')
     }
@@ -5099,6 +5172,20 @@ function File_LineNumbers (preferences) {
         reloadPreferences: function () {
             setVisible(preferences.showLineNumbers)
         },
+        getNextBookmarkLine: function (cursorLine) {
+            var index = findNextBookmarkLine(cursorLine + 1)
+            if (index == -1) {
+                index = findNextBookmarkLine(0)
+            }
+            return index
+        },
+        getPrevBookmarkLine: function (cursorLine) {
+            var index = findPrevBookmarkLine(cursorLine - 1)
+            if (index == -1) {
+                index = findPrevBookmarkLine(numbersElement.childNodes.length - 1)
+            }
+            return index
+        },
         setCursorLine: function (n) {
             lineElement.style.top = n * 16 + 'px'
             if (currentNumberElement) {
@@ -5120,6 +5207,14 @@ function File_LineNumbers (preferences) {
         },
         setScrollTop: function (scrollTop) {
             scrollElement.style.top = -scrollTop + 'px'
+        },
+        toggleBookmark: function (lineNumber) {
+            var bookmarkedNumber = numbersElement.childNodes[lineNumber]
+            if (bookmarkedNumber.classList.contains('bookmarked')) {
+                bookmarkedNumber.classList.remove('bookmarked')
+            } else {
+                bookmarkedNumber.classList.add('bookmarked')
+            }
         },
     }
 
@@ -6737,6 +6832,8 @@ function FileTabs_Tab (file, preferences) {
         forRichTextarea: file.forRichTextarea,
         getContent: file.getContent,
         getSelectedText: file.getSelectedText,
+        gotoNextBookmark: file.gotoNextBookmark,
+        gotoPrevBookmark: file.gotoPrevBookmark,
         isModified: isModified,
         keyDown: file.keyDown,
         loadContent: file.loadContent,
@@ -6753,6 +6850,7 @@ function FileTabs_Tab (file, preferences) {
         showGoToLineBar: file.showGoToLineBar,
         showReplaceBar: file.showReplaceBar,
         showSearchBar: file.showSearchBar,
+        toggleBookmark: file.toggleBookmark,
         getFile: function () {
             return file
         },
@@ -7012,6 +7110,12 @@ function FileTabs_Tabs () {
         getActiveTab: function () {
             return activeTab
         },
+        gotoNextBookmark: function () {
+            activeTab.gotoNextBookmark()
+        },
+        gotoPrevBookmark: function () {
+            activeTab.gotoPrevBookmark()
+        },
         isModified: function () {
             for (var i = 0; i < items.length; i++) {
                 if (items[i].isModified()) return true
@@ -7091,6 +7195,9 @@ function FileTabs_Tabs () {
         },
         showSearchBar: function () {
             activeTab.showSearchBar()
+        },
+        toggleBookmark: function () {
+            activeTab.toggleBookmark()
         },
     }
 
@@ -8893,6 +9000,9 @@ function RichTextarea_Textarea (preferences) {
             return false
 
         },
+        getCursorLine: function () {
+            return cursorLine
+        },
         getLastCursorColumn: function () {
             return lastCursorColumn
         },
@@ -8926,7 +9036,7 @@ function RichTextarea_Textarea (preferences) {
         goToLine: function (line) {
             var index = 0,
                 value = textarea.value
-            for (var i = 0; i < line - 1; i++) {
+            for (var i = 0; i < line; i++) {
                 var newIndex = value.indexOf('\n', index)
                 if (newIndex == -1) break
                 index = newIndex + 1
@@ -9303,6 +9413,8 @@ function Languages_de_Terms () {
         GENERAL: 'Allgemein',
         GO: 'Gehe yu',
         GO_TO_LINE: 'Gehe zu Zeile',
+        GOTO_NEXT_BOOKMARK: 'Goto Next Bookmark',
+        GOTO_PREVIOUS_BOOKMARK: 'Goto Previous Bookmark',
         IMPORT: 'Importieren',
         IMPORTING: 'Wird Importiert\u2026',
         INVALID_LOGIN: 'Authentifizierung fehlgeschlagen. Der Benutzername oder das Kennwort ist ungültig.',
@@ -9376,6 +9488,7 @@ function Languages_de_Terms () {
         SIDE_PANEL: 'Seiten-Panel',
         STATUS_BAR: 'Status Bar',
         TAB_SIZE: 'Tabgröße',
+        TOGGLE_BOOKMARK: 'Toggle Bookmark',
         TOOLBAR: 'Symbolleiste',
         TOOLS: 'Werkzeuge',
         TRANSLATORS: 'Übersetzer',
@@ -9460,6 +9573,8 @@ function Languages_en_Terms () {
         GENERAL: 'General',
         GO: 'Go',
         GO_TO_LINE: 'Go to Line',
+        GOTO_NEXT_BOOKMARK: 'Goto Next Bookmark',
+        GOTO_PREVIOUS_BOOKMARK: 'Goto Previous Bookmark',
         IMPORT: 'Import',
         IMPORTING: 'Importing\u2026',
         INVALID_LOGIN: 'Authentication failed. The username or the password is invalid.',
@@ -9533,6 +9648,7 @@ function Languages_en_Terms () {
         SIDE_PANEL: 'Side Panel',
         STATUS_BAR: 'Status Bar',
         TAB_SIZE: 'Tab size',
+        TOGGLE_BOOKMARK: 'Toggle Bookmark',
         TOOLBAR: 'Toolbar',
         TOOLS: 'Tools',
         TRANSLATORS: 'Translated by',
@@ -9617,6 +9733,8 @@ function Languages_ka_Terms () {
         GENERAL: 'ზოგადი',
         GO: 'გადასვლა',
         GO_TO_LINE: 'ხაზზე გადასვლა',
+        GOTO_NEXT_BOOKMARK: 'შემდეგ სანიშნეზე გადასვლა',
+        GOTO_PREVIOUS_BOOKMARK: 'წინა სანიშნეზე გადასვლა',
         IMPORT: 'იმპორტი',
         IMPORTING: 'მიმდინარეობს იმპორტი\u2026',
         INVALID_LOGIN: 'ავტორიზაცია ვერ შედგა. მომხმარებლის სახელი ან პაროლი არასწორია.',
@@ -9690,6 +9808,7 @@ function Languages_ka_Terms () {
         SIDE_PANEL: 'გვერდითა დაფა',
         STATUS_BAR: 'სტატუსის ზოლი',
         TAB_SIZE: 'ტაბის ზომა',
+        TOGGLE_BOOKMARK: 'სანიშნის ჩართვა/გამორთვა',
         TOOLBAR: 'ხელსაწყოების დაფა',
         TOOLS: 'ხელსაწყო',
         TRANSLATORS: 'მთარგმნელები',

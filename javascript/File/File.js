@@ -327,6 +327,20 @@ function File_File (preferences, remoteApi) {
         getPath: function () {
             return path
         },
+        gotoNextBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            var newCursorLine = lineNumbers.getNextBookmarkLine(cursorLine)
+            if (newCursorLine != -1) {
+                richTextarea.goToLine(newCursorLine)
+            }
+        },
+        gotoPrevBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            var newCursorLine = lineNumbers.getPrevBookmarkLine(cursorLine)
+            if (newCursorLine != -1) {
+                richTextarea.goToLine(newCursorLine)
+            }
+        },
         keyDown: function (e) {
             if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
                 if (e.keyCode == KeyCodes.ESC) {
@@ -421,6 +435,10 @@ function File_File (preferences, remoteApi) {
         showReplaceBar: function () {
             showSearchBar()
             replaceBar.show()
+        },
+        toggleBookmark: function () {
+            var cursorLine = richTextarea.getCursorLine()
+            lineNumbers.toggleBookmark(cursorLine)
         },
     }
 

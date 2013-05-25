@@ -1195,6 +1195,7 @@ var KeyCodes = {
     F9: 120,
     F10: 121,
     A: 'A'.charCodeAt(0),
+    B: 'B'.charCodeAt(0),
     D: 'D'.charCodeAt(0),
     E: 'E'.charCodeAt(0),
     F: 'F'.charCodeAt(0),
@@ -2443,11 +2444,17 @@ function RootPane () {
                         } else if (keyCode == KeyCodes.PAGE_DOWN) {
                             // CTRL+ALT+PAGE_DOWN
                             clickMenuItem(e, nextDocumentMenuItem)
+                        } else if (keyCode == KeyCodes.B) {
+                            // CTRL+ALT+B
+                            clickMenuItem(e, toggleBookmarkMenuItem)
                         }
                     }
                 } else {
                     if (e.shiftKey) {
-                        if (keyCode == KeyCodes.G) {
+                        if (keyCode == KeyCodes.B) {
+                            // SHIFT+CTRL+B
+                            clickMenuItem(e, prevBookmarkMenuItem)
+                        } else if (keyCode == KeyCodes.G) {
                             // SHIFT+CTRL+G
                             clickMenuItem(e, findPrevMenuItem)
                         } else if (keyCode == KeyCodes.L) {
@@ -2470,6 +2477,9 @@ function RootPane () {
                         if (keyCode == KeyCodes.A) {
                             // CTRL+A
                             if (sidePane.select()) e.preventDefault()
+                        } else if (keyCode == KeyCodes.B) {
+                            // CTRL+B
+                            clickMenuItem(e, nextBookmarkMenuItem)
                         } else if (keyCode == KeyCodes.F) {
                             // CTRL+F
                             clickMenuItem(e, findMenuItem)
@@ -2590,6 +2600,9 @@ function RootPane () {
         redoMenuItem.setText(terms.REDO)
         deleteMenuItem.setText(terms.DELETE)
         selectAllMenuItem.setText(terms.SELECT_ALL)
+        toggleBookmarkMenuItem.setText(terms.TOGGLE_BOOKMARK)
+        prevBookmarkMenuItem.setText(terms.GOTO_PREVIOUS_BOOKMARK)
+        nextBookmarkMenuItem.setText(terms.GOTO_NEXT_BOOKMARK)
         preferencesMenuItem.setText(terms.PREFERENCES)
         upperCaseMenuItem.setText(terms.UPPER_CASE)
         lowerCaseMenuItem.setText(terms.LOWER_CASE)
@@ -2711,6 +2724,9 @@ function RootPane () {
         revertFileMenuItem.enable()
         closeMenuItem.enable()
         selectAllMenuItem.enable()
+        toggleBookmarkMenuItem.enable()
+        prevBookmarkMenuItem.enable()
+        nextBookmarkMenuItem.enable()
         saveAllMenuItem.enable()
         closeAllMenuItem.enable()
         findMenuItem.enable()
@@ -2743,6 +2759,9 @@ function RootPane () {
                 revertFileMenuItem.disable()
                 closeMenuItem.disable()
                 selectAllMenuItem.disable()
+                toggleBookmarkMenuItem.disable()
+                prevBookmarkMenuItem.disable()
+                nextBookmarkMenuItem.disable()
                 saveAllMenuItem.disable()
                 closeAllMenuItem.disable()
                 findMenuItem.disable()
@@ -2880,6 +2899,15 @@ function RootPane () {
     changeCaseMenuGroup.addItem(lowerCaseMenuItem)
     changeCaseMenuGroup.addItem(invertCaseMenuItem)
 
+    var toggleBookmarkMenuItem = Menu_Item('Ctrl+Alt+B')
+    toggleBookmarkMenuItem.onClick(sidePane.toggleBookmark)
+
+    var prevBookmarkMenuItem = Menu_Item('Shift+Ctrl+B')
+    prevBookmarkMenuItem.onClick(sidePane.gotoPrevBookmark)
+
+    var nextBookmarkMenuItem = Menu_Item('Ctrl+B')
+    nextBookmarkMenuItem.onClick(sidePane.gotoNextBookmark)
+
     var editMenuBarItem = MenuBar_Item()
     editMenuBarItem.addItem(undoMenuItem)
     editMenuBarItem.addItem(redoMenuItem)
@@ -2888,6 +2916,10 @@ function RootPane () {
     editMenuBarItem.addItem(selectAllMenuItem)
     editMenuBarItem.addSeparator()
     editMenuBarItem.addItem(changeCaseMenuGroup)
+    editMenuBarItem.addSeparator()
+    editMenuBarItem.addItem(toggleBookmarkMenuItem)
+    editMenuBarItem.addItem(prevBookmarkMenuItem)
+    editMenuBarItem.addItem(nextBookmarkMenuItem)
     editMenuBarItem.addSeparator()
     editMenuBarItem.addItem(preferencesMenuItem)
 
@@ -3715,6 +3747,9 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         showReplaceBar: fileTabs.showReplaceBar,
         showSearchBar: fileTabs.showSearchBar,
         showSearchFilesDialog: fileList.showSearchFilesDialog,
+        toggleBookmark: fileTabs.toggleBookmark,
+        gotoNextBookmark: fileTabs.gotoNextBookmark,
+        gotoPrevBookmark: fileTabs.gotoPrevBookmark,
         addLocalFileTab: function (localFile) {
             var tab = getReusableTab()
             tab.reloadPreferences()

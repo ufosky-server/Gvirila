@@ -128,6 +128,9 @@ function SidePane (dialogContainer, preferences, remoteApi) {
         showReplaceBar: fileTabs.showReplaceBar,
         showSearchBar: fileTabs.showSearchBar,
         showSearchFilesDialog: fileList.showSearchFilesDialog,
+        toggleBookmark: fileTabs.toggleBookmark,
+        gotoNextBookmark: fileTabs.gotoNextBookmark,
+        gotoPrevBookmark: fileTabs.gotoPrevBookmark,
         addLocalFileTab: function (localFile) {
             var tab = getReusableTab()
             tab.reloadPreferences()

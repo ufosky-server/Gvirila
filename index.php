@@ -4,14 +4,14 @@ include_once 'common.php';
 
 include_once 'fns/file_get_datauri.php';
 $head =
-    '<link rel="stylesheet" type="text/css" href="compressed.css?14" />'
+    '<link rel="stylesheet" type="text/css" href="compressed.css?15" />'
     .'<style type="text/css">'
     .'.IconSprite {'
         .'background-image: url('.file_get_datauri('images/sprite.png', 'image/png').');'
     .'}'
     .'</style>';
 
-$body = '<script type="text/javascript" src="compressed.js?20"></script>';
+$body = '<script type="text/javascript" src="compressed.js?21"></script>';
 
 include_once 'fns/echo_page.php';
 echo_page($body, $head);

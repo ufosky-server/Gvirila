@@ -25,6 +25,7 @@ var KeyCodes = {
     F9: 120,
     F10: 121,
     A: 'A'.charCodeAt(0),
+    B: 'B'.charCodeAt(0),
     D: 'D'.charCodeAt(0),
     E: 'E'.charCodeAt(0),
     F: 'F'.charCodeAt(0),

@@ -256,6 +256,8 @@ function FileTabs_Tab (file, preferences) {
         forRichTextarea: file.forRichTextarea,
         getContent: file.getContent,
         getSelectedText: file.getSelectedText,
+        gotoNextBookmark: file.gotoNextBookmark,
+        gotoPrevBookmark: file.gotoPrevBookmark,
         isModified: isModified,
         keyDown: file.keyDown,
         loadContent: file.loadContent,
@@ -272,6 +274,7 @@ function FileTabs_Tab (file, preferences) {
         showGoToLineBar: file.showGoToLineBar,
         showReplaceBar: file.showReplaceBar,
         showSearchBar: file.showSearchBar,
+        toggleBookmark: file.toggleBookmark,
         getFile: function () {
             return file
         },
@@ -530,6 +533,12 @@ function FileTabs_Tabs () {
         getActiveTab: function () {
             return activeTab
         },
+        gotoNextBookmark: function () {
+            activeTab.gotoNextBookmark()
+        },
+        gotoPrevBookmark: function () {
+            activeTab.gotoPrevBookmark()
+        },
         isModified: function () {
             for (var i = 0; i < items.length; i++) {
                 if (items[i].isModified()) return true
@@ -609,6 +618,9 @@ function FileTabs_Tabs () {
         },
         showSearchBar: function () {
             activeTab.showSearchBar()
+        },
+        toggleBookmark: function () {
+            activeTab.toggleBookmark()
         },
     }
 
