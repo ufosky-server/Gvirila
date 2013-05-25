@@ -178,7 +178,6 @@ function RichTextarea_Textarea (preferences) {
 
     })
     textarea.addEventListener('scroll', function () {
-        scrollTop = textarea.scrollTop
         ArrayCall(scrollListeners)
     })
     textarea.addEventListener('keydown', function (e) {
@@ -195,7 +194,7 @@ function RichTextarea_Textarea (preferences) {
         checkSelectionChange()
     })
 
-    var scrollTop = 0
+    var lastCursorColumn = 0
 
     return {
         element: textarea,
@@ -276,7 +275,7 @@ function RichTextarea_Textarea (preferences) {
             return textarea.offsetHeight
         },
         getScrollTop: function () {
-            return scrollTop
+            return textarea.scrollTop
         },
         getSelectedText: function () {
             return textarea.value.substring(

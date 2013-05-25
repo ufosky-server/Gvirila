@@ -1,15 +1,5 @@
 function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
-    function checkIfDifference () {
-        isDifferentName = hostField.getValue() != nameField.getValue()
-    }
-
-    function copyHostToName () {
-        if (!isDifferentName) {
-            nameField.setValue(hostField.getValue())
-        }
-    }
-
     function showErrorTerm (termName) {
         showError(function () {
             return terms[termName]
@@ -114,10 +104,12 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var hostField = TopLabelTextField()
     hostField.setPlaceHolder('example.com')
-    hostField.onBlur(copyHostToName)
     hostField.onEnterKeyPress(connectButton.click)
-    hostField.onInput(copyHostToName)
-    hostField.onKeyUp(copyHostToName)
+    hostField.onInput(function () {
+        if (!isDifferentName) {
+            nameField.setValue(hostField.getValue())
+        }
+    })
 
     var usernameField = TopLabelTextField()
     usernameField.setPlaceHolder('anonymous')
@@ -130,10 +122,10 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var nameField = TopLabelTextField()
     nameField.setPlaceHolder('new-folder')
-    nameField.onBlur(checkIfDifference)
     nameField.onEnterKeyPress(connectButton.click)
-    nameField.onInput(checkIfDifference)
-    nameField.onKeyUp(checkIfDifference)
+    nameField.onInput(function () {
+        isDifferentName = hostField.getValue() != nameField.getValue()
+    })
 
     var buttonBar = ButtonBar()
     buttonBar.addButton(cancelButton)

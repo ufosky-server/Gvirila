@@ -1602,16 +1602,6 @@ function NewFolderDialog (dialogContainer, preferences, remoteApi) {
 ;
 function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
-    function checkIfDifference () {
-        isDifferentName = hostField.getValue() != nameField.getValue()
-    }
-
-    function copyHostToName () {
-        if (!isDifferentName) {
-            nameField.setValue(hostField.getValue())
-        }
-    }
-
     function showErrorTerm (termName) {
         showError(function () {
             return terms[termName]
@@ -1716,10 +1706,12 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var hostField = TopLabelTextField()
     hostField.setPlaceHolder('example.com')
-    hostField.onBlur(copyHostToName)
     hostField.onEnterKeyPress(connectButton.click)
-    hostField.onInput(copyHostToName)
-    hostField.onKeyUp(copyHostToName)
+    hostField.onInput(function () {
+        if (!isDifferentName) {
+            nameField.setValue(hostField.getValue())
+        }
+    })
 
     var usernameField = TopLabelTextField()
     usernameField.setPlaceHolder('anonymous')
@@ -1732,10 +1724,10 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var nameField = TopLabelTextField()
     nameField.setPlaceHolder('new-folder')
-    nameField.onBlur(checkIfDifference)
     nameField.onEnterKeyPress(connectButton.click)
-    nameField.onInput(checkIfDifference)
-    nameField.onKeyUp(checkIfDifference)
+    nameField.onInput(function () {
+        isDifferentName = hostField.getValue() != nameField.getValue()
+    })
 
     var buttonBar = ButtonBar()
     buttonBar.addButton(cancelButton)
@@ -8811,7 +8803,6 @@ function RichTextarea_Textarea (preferences) {
 
     })
     textarea.addEventListener('scroll', function () {
-        scrollTop = textarea.scrollTop
         ArrayCall(scrollListeners)
     })
     textarea.addEventListener('keydown', function (e) {
@@ -8828,7 +8819,7 @@ function RichTextarea_Textarea (preferences) {
         checkSelectionChange()
     })
 
-    var scrollTop = 0
+    var lastCursorColumn = 0
 
     return {
         element: textarea,
@@ -8909,7 +8900,7 @@ function RichTextarea_Textarea (preferences) {
             return textarea.offsetHeight
         },
         getScrollTop: function () {
-            return scrollTop
+            return textarea.scrollTop
         },
         getSelectedText: function () {
             return textarea.value.substring(
