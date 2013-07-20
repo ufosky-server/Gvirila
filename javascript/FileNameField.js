@@ -17,7 +17,7 @@ function FileNameField (fileList, preferences) {
     }
 
     var textField = TextField()
-    textField.onEnterKeyPress(function () {
+    textField.onEnterKeyDown(function () {
         var name = textField.getValue()
         var parentFolderPath = fileList.getParentFolderPath()
         if (name == '..' && parentFolderPath !== null) {

@@ -60,7 +60,7 @@ function File_SearchBar (preferences) {
             hideListeners.push(listener)
         },
         onSearch: function (listener) {
-            textField.onEnterKeyPress(function (e) {
+            textField.onEnterKeyDown(function (e) {
                 var phrase = textField.getValue()
                 if (phrase) {
                     listener(phrase)

@@ -5,14 +5,14 @@ function Menu_CheckItem (shortcutText) {
         menuItem.setIconName('checked')
     }
 
-    function uncheck () {
-        checked = false
-        menuItem.setIconName('unchecked')
-    }
-
     function setChecked (checked) {
         if (checked) check()
         else uncheck()
+    }
+
+    function uncheck () {
+        checked = false
+        menuItem.setIconName('unchecked')
     }
 
     var menuItem = Menu_Item(shortcutText, 'unchecked')
@@ -27,7 +27,6 @@ function Menu_CheckItem (shortcutText) {
         check: check,
         click: menuItem.click,
         clickAndCollapse: menuItem.clickAndCollapse,
-        collapse: menuItem.collapse,
         disable: menuItem.disable,
         element: menuItem.element,
         enable: menuItem.enable,

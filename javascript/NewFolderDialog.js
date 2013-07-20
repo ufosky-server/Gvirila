@@ -91,7 +91,7 @@ function NewFolderDialog (dialogContainer, preferences, remoteApi) {
     dialog.contentElement.appendChild(buttonBar.element)
 
     cancelButton.onClick(dialog.hide)
-    nameField.onEnterKeyPress(createButton.click)
+    nameField.onEnterKeyDown(createButton.click)
 
     return {
         contentElement: dialog.contentElement,

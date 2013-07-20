@@ -104,7 +104,7 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var hostField = TopLabelTextField()
     hostField.setPlaceHolder('example.com')
-    hostField.onEnterKeyPress(connectButton.click)
+    hostField.onEnterKeyDown(connectButton.click)
     hostField.onInput(function () {
         if (!isDifferentName) {
             nameField.setValue(hostField.getValue())
@@ -113,16 +113,16 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var usernameField = TopLabelTextField()
     usernameField.setPlaceHolder('anonymous')
-    usernameField.onEnterKeyPress(connectButton.click)
+    usernameField.onEnterKeyDown(connectButton.click)
 
     var passwordField = TopLabelTextField()
     passwordField.setInputType('password')
     passwordField.setPlaceHolder('*********')
-    passwordField.onEnterKeyPress(connectButton.click)
+    passwordField.onEnterKeyDown(connectButton.click)
 
     var nameField = TopLabelTextField()
     nameField.setPlaceHolder('new-folder')
-    nameField.onEnterKeyPress(connectButton.click)
+    nameField.onEnterKeyDown(connectButton.click)
     nameField.onInput(function () {
         isDifferentName = hostField.getValue() != nameField.getValue()
     })

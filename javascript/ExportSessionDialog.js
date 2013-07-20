@@ -41,7 +41,7 @@ function ExportSessionDialog (dialogContainer, preferences, remoteApi) {
 
     var emailTextField = TopLabelTextField()
     emailTextField.setPlaceHolder('john@example.com')
-    emailTextField.onEnterKeyPress(sendButton.click)
+    emailTextField.onEnterKeyDown(sendButton.click)
 
     var downloadButton = Button()
     downloadButton.onClick(function () {

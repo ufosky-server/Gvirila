@@ -52,7 +52,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var terms
 
     var nameField = LeftLabelTextField()
-    nameField.onEnterKeyPress(search)
+    nameField.onEnterKeyDown(search)
 
     var classPrefix = 'SearchFilesDialog'
 
@@ -60,7 +60,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     nameFieldElement.appendChild(nameField.element)
 
     var contentField = LeftLabelTextField()
-    contentField.onEnterKeyPress(search)
+    contentField.onEnterKeyDown(search)
 
     var contentFieldElement = Div(classPrefix + '-contentField')
     contentFieldElement.appendChild(contentField.element)

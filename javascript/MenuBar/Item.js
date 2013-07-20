@@ -1,6 +1,6 @@
 function MenuBar_Item () {
 
-    function add (element) {
+    function appendChild (element) {
         menuElement.appendChild(element)
     }
 
@@ -117,7 +117,7 @@ function MenuBar_Item () {
         element: element,
         mouseDown: mouseDown,
         addItem: function (item) {
-            add(item.element)
+            appendChild(item.element)
             item.onCollapse(function () {
                 ArrayCall(collapseListeners)
             })
@@ -131,7 +131,7 @@ function MenuBar_Item () {
             }
         },
         addSeparator: function () {
-            add(Div('MenuBar_Item-separator'))
+            appendChild(Div('MenuBar_Item-separator'))
         },
         collapse: function () {
             buttonElement.classList.remove('active')

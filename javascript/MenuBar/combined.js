@@ -1,5 +1,10 @@
 function MenuBar_Bar () {
 
+    function abortAndBlur () {
+        ArrayCall(abortListeners)
+        blur()
+    }
+
     function blur () {
         expandedItem.collapse()
         expandedItem = null
@@ -36,7 +41,7 @@ function MenuBar_Bar () {
                 if (target == barItemsElement) return
                 target = target.parentNode
             }
-            blur()
+            abortAndBlur()
         }
     }
  
@@ -70,7 +75,8 @@ function MenuBar_Bar () {
     element.appendChild(contentElement)
     element.appendChild(barElement)
 
-    var blurListeners = [],
+    var abortListeners = [],
+        blurListeners = [],
         focusListeners = []
 
     var items = []
@@ -107,6 +113,9 @@ function MenuBar_Bar () {
         isFocused: function () {
             return focused
         },
+        onAbort: function (listener) {
+            abortListeners.push(listener)
+        },
         onBlur: function (listener) {
             blurListeners.push(listener)
         },
@@ -120,14 +129,14 @@ function MenuBar_Bar () {
             } else {
                 shouldBlur = true
             }
-            if (shouldBlur) blur()
+            if (shouldBlur) abortAndBlur()
         },
     }
 
 }
 function MenuBar_Item () {
 
-    function add (element) {
+    function appendChild (element) {
         menuElement.appendChild(element)
     }
 
@@ -244,7 +253,7 @@ function MenuBar_Item () {
         element: element,
         mouseDown: mouseDown,
         addItem: function (item) {
-            add(item.element)
+            appendChild(item.element)
             item.onCollapse(function () {
                 ArrayCall(collapseListeners)
             })
@@ -258,7 +267,7 @@ function MenuBar_Item () {
             }
         },
         addSeparator: function () {
-            add(Div('MenuBar_Item-separator'))
+            appendChild(Div('MenuBar_Item-separator'))
         },
         collapse: function () {
             buttonElement.classList.remove('active')

@@ -84,7 +84,7 @@
     color: rgba(255, 255, 255, 0.5);
     cursor: default;
 }
-.Menu_Item-button.disabled:hover {
+.Menu_Item-button.disabled.focused {
     background: transparent;
     box-shadow: none;
 }

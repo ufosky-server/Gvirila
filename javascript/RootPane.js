@@ -157,6 +157,8 @@ function RootPane () {
                         if (menuBar.isFocused()) {
                             menuBar.pressEscapeKey()
                             e.preventDefault()
+                        } else {
+                            sidePane.keyDown(e)
                         }
                     } else {
                         sidePane.keyDown(e)
@@ -844,7 +846,7 @@ function RootPane () {
     })
 
     menuBar.onFocus(sidePane.blurTextarea)
-    menuBar.onBlur(sidePane.focusTextarea)
+    menuBar.onAbort(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {

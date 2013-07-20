@@ -23,7 +23,7 @@ function File_GoToLineBar (preferences) {
 
     var textField = LeftLabelTextField()
     textField.disable()
-    textField.onEnterKeyPress(go)
+    textField.onEnterKeyDown(go)
 
     var classPrefix = 'File_GoToLineBar'
 

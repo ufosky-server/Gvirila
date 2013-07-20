@@ -38,7 +38,7 @@ function RenameDialog (dialogContainer, preferences, remoteApi) {
     })
 
     var nameField = TopLabelTextField()
-    nameField.onEnterKeyPress(renameButton.click)
+    nameField.onEnterKeyDown(renameButton.click)
 
     var buttonBar = ButtonBar()
     buttonBar.addButton(cancelButton)

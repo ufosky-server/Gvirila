@@ -65,62 +65,6 @@ function BottomToolBar () {
     toolBar.element.classList.add('BottomToolBar')
     return toolBar
 }
-function Button () {
-
-    function addClass (className) {
-        element.classList.add(className)
-    }
-
-    function click () {
-        if (!element.disabled) {
-
-            ArrayCall(clickListeners)
-
-            addClass('active')
-            clearTimeout(clickTimeout)
-            clickTimeout = setTimeout(function () {
-                element.classList.remove('active')
-            }, 100)
-
-        }
-    }
-
-    var clickTimeout
-
-    var textNode = TextNode('')
-
-    var element = document.createElement('button')
-    element.className = 'Button'
-    element.appendChild(textNode)
-    element.addEventListener('click', click)
-
-    var clickListeners = []
-
-    return {
-        addClass: addClass,
-        click: click,
-        element: element,
-        disable: function () {
-            element.disabled = true
-        },
-        enable: function () {
-            element.disabled = false
-        },
-        focus: function () {
-            element.focus()
-        },
-        onClick: function (listener) {
-            clickListeners.push(listener)
-        },
-        setText: function (text) {
-            textNode.nodeValue = text
-        },
-        unClick: function (listener) {
-            clickListeners.splice(clickListeners.indexOf(listener), 1)
-        },
-    }
-
-}
 function ButtonBar () {
 
     var classPrefix = 'ButtonBar'
@@ -174,6 +118,62 @@ function ButtonBar () {
                     button.enable()
                 })
             }
+        },
+    }
+
+}
+function Button () {
+
+    function addClass (className) {
+        element.classList.add(className)
+    }
+
+    function click () {
+        if (!element.disabled) {
+
+            ArrayCall(clickListeners)
+
+            addClass('active')
+            clearTimeout(clickTimeout)
+            clickTimeout = setTimeout(function () {
+                element.classList.remove('active')
+            }, 100)
+
+        }
+    }
+
+    var clickTimeout
+
+    var textNode = TextNode('')
+
+    var element = document.createElement('button')
+    element.className = 'Button'
+    element.appendChild(textNode)
+    element.addEventListener('click', click)
+
+    var clickListeners = []
+
+    return {
+        addClass: addClass,
+        click: click,
+        element: element,
+        disable: function () {
+            element.disabled = true
+        },
+        enable: function () {
+            element.disabled = false
+        },
+        focus: function () {
+            element.focus()
+        },
+        onClick: function (listener) {
+            clickListeners.push(listener)
+        },
+        setText: function (text) {
+            textNode.nodeValue = text
+        },
+        unClick: function (listener) {
+            clickListeners.splice(clickListeners.indexOf(listener), 1)
         },
     }
 
@@ -789,7 +789,7 @@ function ExportSessionDialog (dialogContainer, preferences, remoteApi) {
 
     var emailTextField = TopLabelTextField()
     emailTextField.setPlaceHolder('john@example.com')
-    emailTextField.onEnterKeyPress(sendButton.click)
+    emailTextField.onEnterKeyDown(sendButton.click)
 
     var downloadButton = Button()
     downloadButton.onClick(function () {
@@ -933,7 +933,7 @@ function FileNameField (fileList, preferences) {
     }
 
     var textField = TextField()
-    textField.onEnterKeyPress(function () {
+    textField.onEnterKeyDown(function () {
         var name = textField.getValue()
         var parentFolderPath = fileList.getParentFolderPath()
         if (name == '..' && parentFolderPath !== null) {
@@ -1069,13 +1069,6 @@ function HintToolButton (toolButton, hint) {
     }
 
 }
-var ID = (function () {
-    var n = 0
-    return function () {
-        n++
-        return 'id' + n
-    }
-})()
 function Icon (iconName) {
 
     var element = Div('Icon IconSprite ' + iconName)
@@ -1095,6 +1088,13 @@ function Icon (iconName) {
     }
 
 }
+var ID = (function () {
+    var n = 0
+    return function () {
+        n++
+        return 'id' + n
+    }
+})()
 function ImportSessionDialog (dialogContainer, preferences, remoteApi) {
 
     function showNotification (iconName, textGenerator) {
@@ -1283,9 +1283,8 @@ function LeftLabelTextField () {
         getValue: textField.getValue,
         isFocused: textField.isFocused,
         onBlur: textField.onBlur,
-        onEnterKeyPress: textField.onEnterKeyPress,
+        onEnterKeyDown: textField.onEnterKeyDown,
         onInput: textField.onInput,
-        onKeyUp: textField.onKeyUp,
         select: textField.select,
         setLabelText: leftLabel.setText,
         setPlaceHolder: textField.setPlaceHolder,
@@ -1534,7 +1533,7 @@ function NewFolderDialog (dialogContainer, preferences, remoteApi) {
     dialog.contentElement.appendChild(buttonBar.element)
 
     cancelButton.onClick(dialog.hide)
-    nameField.onEnterKeyPress(createButton.click)
+    nameField.onEnterKeyDown(createButton.click)
 
     return {
         contentElement: dialog.contentElement,
@@ -1669,7 +1668,7 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var hostField = TopLabelTextField()
     hostField.setPlaceHolder('example.com')
-    hostField.onEnterKeyPress(connectButton.click)
+    hostField.onEnterKeyDown(connectButton.click)
     hostField.onInput(function () {
         if (!isDifferentName) {
             nameField.setValue(hostField.getValue())
@@ -1678,16 +1677,16 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var usernameField = TopLabelTextField()
     usernameField.setPlaceHolder('anonymous')
-    usernameField.onEnterKeyPress(connectButton.click)
+    usernameField.onEnterKeyDown(connectButton.click)
 
     var passwordField = TopLabelTextField()
     passwordField.setInputType('password')
     passwordField.setPlaceHolder('*********')
-    passwordField.onEnterKeyPress(connectButton.click)
+    passwordField.onEnterKeyDown(connectButton.click)
 
     var nameField = TopLabelTextField()
     nameField.setPlaceHolder('new-folder')
-    nameField.onEnterKeyPress(connectButton.click)
+    nameField.onEnterKeyDown(connectButton.click)
     nameField.onInput(function () {
         isDifferentName = hostField.getValue() != nameField.getValue()
     })
@@ -1743,30 +1742,6 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
     }
 
 }
-function Notification (iconName, textGenerator) {
-
-    var textNode = TextNode('')
-
-    var classPrefix = 'Notification'
-
-    var textElement = Div(classPrefix + '-text')
-    textElement.appendChild(textNode)
-
-    var icon = Icon()
-    icon.setIconName(iconName)
-
-    var element = Div(classPrefix)
-    element.appendChild(icon.element)
-    element.appendChild(textElement)
-
-    return {
-        element: element,
-        reloadPreferences: function () {
-            textNode.nodeValue = textGenerator()
-        },
-    }
-
-}
 function NotificationBar () {
 
     var classPrefix = 'NotificationBar'
@@ -1807,6 +1782,30 @@ function NotificationBar () {
                 element.classList.remove('visible')
             }, 3000)
 
+        },
+    }
+
+}
+function Notification (iconName, textGenerator) {
+
+    var textNode = TextNode('')
+
+    var classPrefix = 'Notification'
+
+    var textElement = Div(classPrefix + '-text')
+    textElement.appendChild(textNode)
+
+    var icon = Icon()
+    icon.setIconName(iconName)
+
+    var element = Div(classPrefix)
+    element.appendChild(icon.element)
+    element.appendChild(textElement)
+
+    return {
+        element: element,
+        reloadPreferences: function () {
+            textNode.nodeValue = textGenerator()
         },
     }
 
@@ -2168,7 +2167,7 @@ function RenameDialog (dialogContainer, preferences, remoteApi) {
     })
 
     var nameField = TopLabelTextField()
-    nameField.onEnterKeyPress(renameButton.click)
+    nameField.onEnterKeyDown(renameButton.click)
 
     var buttonBar = ButtonBar()
     buttonBar.addButton(cancelButton)
@@ -2561,6 +2560,8 @@ function RootPane () {
                         if (menuBar.isFocused()) {
                             menuBar.pressEscapeKey()
                             e.preventDefault()
+                        } else {
+                            sidePane.keyDown(e)
                         }
                     } else {
                         sidePane.keyDown(e)
@@ -3248,7 +3249,7 @@ function RootPane () {
     })
 
     menuBar.onFocus(sidePane.blurTextarea)
-    menuBar.onBlur(sidePane.focusTextarea)
+    menuBar.onAbort(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {
@@ -3545,7 +3546,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var terms
 
     var nameField = LeftLabelTextField()
-    nameField.onEnterKeyPress(search)
+    nameField.onEnterKeyDown(search)
 
     var classPrefix = 'SearchFilesDialog'
 
@@ -3553,7 +3554,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     nameFieldElement.appendChild(nameField.element)
 
     var contentField = LeftLabelTextField()
-    contentField.onEnterKeyPress(search)
+    contentField.onEnterKeyDown(search)
 
     var contentFieldElement = Div(classPrefix + '-contentField')
     contentFieldElement.appendChild(contentField.element)
@@ -3899,10 +3900,6 @@ function StringFormat (string, values) {
 }
 function TextField () {
 
-    function onKeyPress (listener) {
-        input.addEventListener('keypress', listener)
-    }
-
     var input = document.createElement('input')
     input.type = 'text'
     input.className = 'TextField'
@@ -3917,7 +3914,6 @@ function TextField () {
 
     return {
         element: input,
-        onKeyPress: onKeyPress,
         clear: function () {
             input.value = ''
         },
@@ -3942,14 +3938,11 @@ function TextField () {
         onInput: function (listener) {
             input.addEventListener('input', listener)
         },
-        onKeyUp: function (listener) {
-            input.addEventListener('keyup', listener)
-        },
         onKeyDown: function (listener) {
             input.addEventListener('keydown', listener)
         },
-        onEnterKeyPress: function (listener) {
-            onKeyPress(function (e) {
+        onEnterKeyDown: function (listener) {
+            input.addEventListener('keydown', function (e) {
                 if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey &&
                     e.keyCode == KeyCodes.ENTER) {
                     e.preventDefault()
@@ -4184,6 +4177,22 @@ function ToolButton (iconElement) {
     }
 
 }
+function TopLabelFileField (preferences) {
+
+    var fileField = FileField(preferences)
+
+    var topLabel = TopLabel(fileField.element)
+
+    return {
+        element: topLabel.element,
+        clear: fileField.clear,
+        focus: fileField.focus,
+        getFileInput: fileField.getFileInput,
+        reloadPreferences: fileField.reloadPreferences,
+        setLabelText: topLabel.setText,
+    }
+
+}
 function TopLabel (value) {
 
     var textNode = TextNode()
@@ -4210,22 +4219,6 @@ function TopLabel (value) {
     }
 
 }
-function TopLabelFileField (preferences) {
-
-    var fileField = FileField(preferences)
-
-    var topLabel = TopLabel(fileField.element)
-
-    return {
-        element: topLabel.element,
-        clear: fileField.clear,
-        focus: fileField.focus,
-        getFileInput: fileField.getFileInput,
-        reloadPreferences: fileField.reloadPreferences,
-        setLabelText: topLabel.setText,
-    }
-
-}
 function TopLabelTextField () {
 
     var id = ID()
@@ -4242,9 +4235,8 @@ function TopLabelTextField () {
         focus: textField.focus,
         getValue: textField.getValue,
         onBlur: textField.onBlur,
-        onEnterKeyPress: textField.onEnterKeyPress,
+        onEnterKeyDown: textField.onEnterKeyDown,
         onInput: textField.onInput,
-        onKeyUp: textField.onKeyUp,
         select: textField.select,
         setInputType: textField.setInputType,
         setPlaceHolder: textField.setPlaceHolder,
@@ -4255,6 +4247,11 @@ function TopLabelTextField () {
     }
 
 }
+function UrlencodedXHR (url, callback) {
+    var xhr = XHR(url, callback)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    return xhr
+}
 var UTF8 = {
     decode: function (encoded) {
         return decodeURIComponent(escape(encoded))
@@ -4262,11 +4259,6 @@ var UTF8 = {
     encode: function (text) {
         return unescape(encodeURIComponent(text))
     },
-}
-function UrlencodedXHR (url, callback) {
-    var xhr = XHR(url, callback)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    return xhr
 }
 function XHR (url, callback) {
     var xhr = new XMLHttpRequest

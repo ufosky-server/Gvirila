@@ -809,7 +809,7 @@ function ExportSessionDialog (dialogContainer, preferences, remoteApi) {
 
     var emailTextField = TopLabelTextField()
     emailTextField.setPlaceHolder('john@example.com')
-    emailTextField.onEnterKeyPress(sendButton.click)
+    emailTextField.onEnterKeyDown(sendButton.click)
 
     var downloadButton = Button()
     downloadButton.onClick(function () {
@@ -961,7 +961,7 @@ function FileNameField (fileList, preferences) {
     }
 
     var textField = TextField()
-    textField.onEnterKeyPress(function () {
+    textField.onEnterKeyDown(function () {
         var name = textField.getValue()
         var parentFolderPath = fileList.getParentFolderPath()
         if (name == '..' && parentFolderPath !== null) {
@@ -1315,9 +1315,8 @@ function LeftLabelTextField () {
         getValue: textField.getValue,
         isFocused: textField.isFocused,
         onBlur: textField.onBlur,
-        onEnterKeyPress: textField.onEnterKeyPress,
+        onEnterKeyDown: textField.onEnterKeyDown,
         onInput: textField.onInput,
-        onKeyUp: textField.onKeyUp,
         select: textField.select,
         setLabelText: leftLabel.setText,
         setPlaceHolder: textField.setPlaceHolder,
@@ -1571,7 +1570,7 @@ function NewFolderDialog (dialogContainer, preferences, remoteApi) {
     dialog.contentElement.appendChild(buttonBar.element)
 
     cancelButton.onClick(dialog.hide)
-    nameField.onEnterKeyPress(createButton.click)
+    nameField.onEnterKeyDown(createButton.click)
 
     return {
         contentElement: dialog.contentElement,
@@ -1707,7 +1706,7 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var hostField = TopLabelTextField()
     hostField.setPlaceHolder('example.com')
-    hostField.onEnterKeyPress(connectButton.click)
+    hostField.onEnterKeyDown(connectButton.click)
     hostField.onInput(function () {
         if (!isDifferentName) {
             nameField.setValue(hostField.getValue())
@@ -1716,16 +1715,16 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
 
     var usernameField = TopLabelTextField()
     usernameField.setPlaceHolder('anonymous')
-    usernameField.onEnterKeyPress(connectButton.click)
+    usernameField.onEnterKeyDown(connectButton.click)
 
     var passwordField = TopLabelTextField()
     passwordField.setInputType('password')
     passwordField.setPlaceHolder('*********')
-    passwordField.onEnterKeyPress(connectButton.click)
+    passwordField.onEnterKeyDown(connectButton.click)
 
     var nameField = TopLabelTextField()
     nameField.setPlaceHolder('new-folder')
-    nameField.onEnterKeyPress(connectButton.click)
+    nameField.onEnterKeyDown(connectButton.click)
     nameField.onInput(function () {
         isDifferentName = hostField.getValue() != nameField.getValue()
     })
@@ -2214,7 +2213,7 @@ function RenameDialog (dialogContainer, preferences, remoteApi) {
     })
 
     var nameField = TopLabelTextField()
-    nameField.onEnterKeyPress(renameButton.click)
+    nameField.onEnterKeyDown(renameButton.click)
 
     var buttonBar = ButtonBar()
     buttonBar.addButton(cancelButton)
@@ -2611,6 +2610,8 @@ function RootPane () {
                         if (menuBar.isFocused()) {
                             menuBar.pressEscapeKey()
                             e.preventDefault()
+                        } else {
+                            sidePane.keyDown(e)
                         }
                     } else {
                         sidePane.keyDown(e)
@@ -3298,7 +3299,7 @@ function RootPane () {
     })
 
     menuBar.onFocus(sidePane.blurTextarea)
-    menuBar.onBlur(sidePane.focusTextarea)
+    menuBar.onAbort(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {
@@ -3598,7 +3599,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var terms
 
     var nameField = LeftLabelTextField()
-    nameField.onEnterKeyPress(search)
+    nameField.onEnterKeyDown(search)
 
     var classPrefix = 'SearchFilesDialog'
 
@@ -3606,7 +3607,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     nameFieldElement.appendChild(nameField.element)
 
     var contentField = LeftLabelTextField()
-    contentField.onEnterKeyPress(search)
+    contentField.onEnterKeyDown(search)
 
     var contentFieldElement = Div(classPrefix + '-contentField')
     contentFieldElement.appendChild(contentField.element)
@@ -3957,10 +3958,6 @@ function StringFormat (string, values) {
 ;
 function TextField () {
 
-    function onKeyPress (listener) {
-        input.addEventListener('keypress', listener)
-    }
-
     var input = document.createElement('input')
     input.type = 'text'
     input.className = 'TextField'
@@ -3975,7 +3972,6 @@ function TextField () {
 
     return {
         element: input,
-        onKeyPress: onKeyPress,
         clear: function () {
             input.value = ''
         },
@@ -4000,14 +3996,11 @@ function TextField () {
         onInput: function (listener) {
             input.addEventListener('input', listener)
         },
-        onKeyUp: function (listener) {
-            input.addEventListener('keyup', listener)
-        },
         onKeyDown: function (listener) {
             input.addEventListener('keydown', listener)
         },
-        onEnterKeyPress: function (listener) {
-            onKeyPress(function (e) {
+        onEnterKeyDown: function (listener) {
+            input.addEventListener('keydown', function (e) {
                 if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey &&
                     e.keyCode == KeyCodes.ENTER) {
                     e.preventDefault()
@@ -4309,9 +4302,8 @@ function TopLabelTextField () {
         focus: textField.focus,
         getValue: textField.getValue,
         onBlur: textField.onBlur,
-        onEnterKeyPress: textField.onEnterKeyPress,
+        onEnterKeyDown: textField.onEnterKeyDown,
         onInput: textField.onInput,
-        onKeyUp: textField.onKeyUp,
         select: textField.select,
         setInputType: textField.setInputType,
         setPlaceHolder: textField.setPlaceHolder,
@@ -5091,7 +5083,7 @@ function File_GoToLineBar (preferences) {
 
     var textField = LeftLabelTextField()
     textField.disable()
-    textField.onEnterKeyPress(go)
+    textField.onEnterKeyDown(go)
 
     var classPrefix = 'File_GoToLineBar'
 
@@ -5572,7 +5564,7 @@ function File_SearchBar (preferences) {
             hideListeners.push(listener)
         },
         onSearch: function (listener) {
-            textField.onEnterKeyPress(function (e) {
+            textField.onEnterKeyDown(function (e) {
                 var phrase = textField.getValue()
                 if (phrase) {
                     listener(phrase)
@@ -7247,14 +7239,14 @@ function Menu_CheckItem (shortcutText) {
         menuItem.setIconName('checked')
     }
 
-    function uncheck () {
-        checked = false
-        menuItem.setIconName('unchecked')
-    }
-
     function setChecked (checked) {
         if (checked) check()
         else uncheck()
+    }
+
+    function uncheck () {
+        checked = false
+        menuItem.setIconName('unchecked')
     }
 
     var menuItem = Menu_Item(shortcutText, 'unchecked')
@@ -7269,7 +7261,6 @@ function Menu_CheckItem (shortcutText) {
         check: check,
         click: menuItem.click,
         clickAndCollapse: menuItem.clickAndCollapse,
-        collapse: menuItem.collapse,
         disable: menuItem.disable,
         element: menuItem.element,
         enable: menuItem.enable,
@@ -7572,6 +7563,11 @@ function Menu_Item (shortcutText) {
 ;
 function MenuBar_Bar () {
 
+    function abortAndBlur () {
+        ArrayCall(abortListeners)
+        blur()
+    }
+
     function blur () {
         expandedItem.collapse()
         expandedItem = null
@@ -7608,7 +7604,7 @@ function MenuBar_Bar () {
                 if (target == barItemsElement) return
                 target = target.parentNode
             }
-            blur()
+            abortAndBlur()
         }
     }
  
@@ -7642,7 +7638,8 @@ function MenuBar_Bar () {
     element.appendChild(contentElement)
     element.appendChild(barElement)
 
-    var blurListeners = [],
+    var abortListeners = [],
+        blurListeners = [],
         focusListeners = []
 
     var items = []
@@ -7679,6 +7676,9 @@ function MenuBar_Bar () {
         isFocused: function () {
             return focused
         },
+        onAbort: function (listener) {
+            abortListeners.push(listener)
+        },
         onBlur: function (listener) {
             blurListeners.push(listener)
         },
@@ -7692,7 +7692,7 @@ function MenuBar_Bar () {
             } else {
                 shouldBlur = true
             }
-            if (shouldBlur) blur()
+            if (shouldBlur) abortAndBlur()
         },
     }
 
@@ -7700,7 +7700,7 @@ function MenuBar_Bar () {
 ;
 function MenuBar_Item () {
 
-    function add (element) {
+    function appendChild (element) {
         menuElement.appendChild(element)
     }
 
@@ -7817,7 +7817,7 @@ function MenuBar_Item () {
         element: element,
         mouseDown: mouseDown,
         addItem: function (item) {
-            add(item.element)
+            appendChild(item.element)
             item.onCollapse(function () {
                 ArrayCall(collapseListeners)
             })
@@ -7831,7 +7831,7 @@ function MenuBar_Item () {
             }
         },
         addSeparator: function () {
-            add(Div('MenuBar_Item-separator'))
+            appendChild(Div('MenuBar_Item-separator'))
         },
         collapse: function () {
             buttonElement.classList.remove('active')
