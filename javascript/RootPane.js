@@ -25,12 +25,32 @@ function RootPane () {
 
     function disableShortcuts () {
         document.body.removeEventListener('keydown', documentKeyDown)
+        document.body.removeEventListener('keyup', documentKeyUp)
         sidePane.disableTextarea()
+    }
+
+    function documentKeyUp (e) {
+        if (altKeyDown && !e.ctrlKey && !e.metaKey && !e.shiftKey &&
+            e.keyCode == KeyCodes.ALT) {
+            if (menuBar.isFocused()) {
+                menuBar.blur()
+            } else {
+                menuBar.focus()
+            }
+            e.preventDefault()
+        }
     }
 
     function documentKeyDown (e) {
         var keyCode = e.keyCode
         if (!e.metaKey) {
+
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && keyCode == KeyCodes.ALT) {
+                altKeyDown = true
+            } else {
+                altKeyDown = false
+            }
+
             if (e.ctrlKey) {
                 if (e.altKey) {
                     if (!e.shiftKey) {
@@ -132,11 +152,18 @@ function RootPane () {
                     } else if (keyCode == KeyCodes.F10) {
                         // F10
                         clickMenuItem(e, statusBarMenuItem)
+                    } else if (keyCode == KeyCodes.ESC) {
+                        // ESC
+                        if (menuBar.isFocused()) {
+                            menuBar.pressEscapeKey()
+                            e.preventDefault()
+                        }
                     } else {
                         sidePane.keyDown(e)
                     }
                 }
             }
+
         }
     }
 
@@ -152,6 +179,7 @@ function RootPane () {
 
     function enableShortcuts () {
         document.body.addEventListener('keydown', documentKeyDown)
+        document.body.addEventListener('keyup', documentKeyUp)
         sidePane.enableTextarea()
         sidePane.focusTextarea()
     }
@@ -285,13 +313,16 @@ function RootPane () {
         })
     }
 
+    var altKeyDown
+
     var languages = Languages()
 
     var preferences = Preferences(languages)
     preferences.onChange(reloadPreferences)
 
-    var menuBar = MenuBar_Bar(),
-        dialogContainer = menuBar.element
+    var menuBar = MenuBar_Bar()
+
+    var dialogContainer = menuBar.element
 
     var remoteApi = AwakeRemoteAPI()
 
@@ -812,6 +843,8 @@ function RootPane () {
         }
     })
 
+    menuBar.onFocus(sidePane.blurTextarea)
+    menuBar.onBlur(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {

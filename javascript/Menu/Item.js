@@ -4,6 +4,11 @@ function Menu_Item (shortcutText) {
         ArrayCall(clickListeners)
     }
 
+    function clickAndCollapse () {
+        click()
+        ArrayCall(collapseListeners)
+    }
+
     function disable () {
         enabled = false
         buttonElement.classList.add('disabled')
@@ -17,8 +22,7 @@ function Menu_Item (shortcutText) {
     function handleMouseDown (e) {
         if (e.button === 0 && enabled) {
             e.preventDefault()
-            ArrayCall(collapseListeners)
-            click()
+            clickAndCollapse()
         }
     }
 
@@ -56,10 +60,17 @@ function Menu_Item (shortcutText) {
 
     return {
         click: click,
+        clickAndCollapse: clickAndCollapse,
         disable: disable,
         element: element,
         enable: enable,
         setIconName: icon.setIconName,
+        blur: function () {
+            buttonElement.classList.remove('focused')
+        },
+        focus: function () {
+            buttonElement.classList.add('focused')
+        },
         isEnabled: function () {
             return enabled
         },
@@ -71,6 +82,9 @@ function Menu_Item (shortcutText) {
         },
         onMouseOver: function (listener) {
             mouseOverListeners.push(listener)
+        },
+        pressEscapeKey: function () {
+            return true
         },
         setEnabled: function (enabled) {
             if (enabled) enable()

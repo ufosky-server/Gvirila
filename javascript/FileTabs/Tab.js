@@ -93,6 +93,7 @@ function FileTabs_Tab (file, preferences) {
         untitledIndex
 
     return {
+        blur: file.blur,
         canDeleteText: file.canDeleteText,
         canRedo: file.canRedo,
         canUndo: file.canUndo,

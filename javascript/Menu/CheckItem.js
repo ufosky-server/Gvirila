@@ -23,12 +23,15 @@ function Menu_CheckItem (shortcutText) {
     var checked = false
 
     return {
+        blur: menuItem.blur,
         check: check,
         click: menuItem.click,
+        clickAndCollapse: menuItem.clickAndCollapse,
         collapse: menuItem.collapse,
         disable: menuItem.disable,
         element: menuItem.element,
         enable: menuItem.enable,
+        focus: menuItem.focus,
         isEnabled: menuItem.isEnabled,
         onClick: menuItem.onClick,
         onCollapse: menuItem.onCollapse,
@@ -39,6 +42,9 @@ function Menu_CheckItem (shortcutText) {
         uncheck: uncheck,
         isChecked: function () {
             return checked
+        },
+        pressEscapeKey: function () {
+            return true
         },
     }
 

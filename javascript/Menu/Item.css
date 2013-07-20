@@ -22,7 +22,7 @@
     color: #f7f7f0;
     cursor: pointer;
 }
-.Menu_Item-button:hover {
+.Menu_Item-button.focused {
     background: #669900;
     background-image: linear-gradient(#77aa11, #669900);
     background-image: -webkit-linear-gradient(#77aa11, #669900);

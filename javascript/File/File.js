@@ -295,6 +295,7 @@ function File_File (preferences, remoteApi) {
         mtime = 0
 
     return {
+        blur: richTextarea.blur,
         canDeleteText: richTextarea.canDeleteText,
         canRedo: richTextarea.canRedo,
         canUndo: richTextarea.canUndo,

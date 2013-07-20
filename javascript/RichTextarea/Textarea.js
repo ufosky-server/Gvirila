@@ -203,6 +203,9 @@ function RichTextarea_Textarea (preferences) {
         pushUndoState: pushUndoState,
         setSelectionRange: setSelectionRange,
         setValue: setValue,
+        blur: function () {
+            textarea.blur()
+        },
         canDeleteText: function () {
             return canDeleteText
         },

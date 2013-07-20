@@ -138,6 +138,9 @@ function FileTabs_Tabs () {
             setActiveTab(fileTab)
             checkNumTabs()
         },
+        blurTextarea: function () {
+            if (activeTab) activeTab.blur()
+        },
         canDeleteText: function () {
             if (activeTab) {
                 return activeTab.canDeleteText()
@@ -185,9 +188,7 @@ function FileTabs_Tabs () {
             activeTab.findPrev()
         },
         focusTextarea: function () {
-            if (activeTab) {
-                activeTab.focus()
-            }
+            if (activeTab) activeTab.focus()
         },
         forRichTextarea: function (callback) {
             if (activeTab) {

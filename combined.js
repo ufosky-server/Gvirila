@@ -2479,12 +2479,32 @@ function RootPane () {
 
     function disableShortcuts () {
         document.body.removeEventListener('keydown', documentKeyDown)
+        document.body.removeEventListener('keyup', documentKeyUp)
         sidePane.disableTextarea()
+    }
+
+    function documentKeyUp (e) {
+        if (altKeyDown && !e.ctrlKey && !e.metaKey && !e.shiftKey &&
+            e.keyCode == KeyCodes.ALT) {
+            if (menuBar.isFocused()) {
+                menuBar.blur()
+            } else {
+                menuBar.focus()
+            }
+            e.preventDefault()
+        }
     }
 
     function documentKeyDown (e) {
         var keyCode = e.keyCode
         if (!e.metaKey) {
+
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && keyCode == KeyCodes.ALT) {
+                altKeyDown = true
+            } else {
+                altKeyDown = false
+            }
+
             if (e.ctrlKey) {
                 if (e.altKey) {
                     if (!e.shiftKey) {
@@ -2586,11 +2606,18 @@ function RootPane () {
                     } else if (keyCode == KeyCodes.F10) {
                         // F10
                         clickMenuItem(e, statusBarMenuItem)
+                    } else if (keyCode == KeyCodes.ESC) {
+                        // ESC
+                        if (menuBar.isFocused()) {
+                            menuBar.pressEscapeKey()
+                            e.preventDefault()
+                        }
                     } else {
                         sidePane.keyDown(e)
                     }
                 }
             }
+
         }
     }
 
@@ -2606,6 +2633,7 @@ function RootPane () {
 
     function enableShortcuts () {
         document.body.addEventListener('keydown', documentKeyDown)
+        document.body.addEventListener('keyup', documentKeyUp)
         sidePane.enableTextarea()
         sidePane.focusTextarea()
     }
@@ -2739,13 +2767,16 @@ function RootPane () {
         })
     }
 
+    var altKeyDown
+
     var languages = Languages()
 
     var preferences = Preferences(languages)
     preferences.onChange(reloadPreferences)
 
-    var menuBar = MenuBar_Bar(),
-        dialogContainer = menuBar.element
+    var menuBar = MenuBar_Bar()
+
+    var dialogContainer = menuBar.element
 
     var remoteApi = AwakeRemoteAPI()
 
@@ -3266,6 +3297,8 @@ function RootPane () {
         }
     })
 
+    menuBar.onFocus(sidePane.blurTextarea)
+    menuBar.onBlur(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {
@@ -3759,6 +3792,7 @@ function SidePane (dialogContainer, preferences, remoteApi) {
 
     return {
         addNewTab: addNewTab,
+        blurTextarea: fileTabs.blurTextarea,
         canCreateFolder: fileList.canCreateFolder,
         canCreateNetworkFolder: fileList.canCreateNetworkFolder,
         canDeleteText: fileTabs.canDeleteText,
@@ -4882,6 +4916,7 @@ function File_File (preferences, remoteApi) {
         mtime = 0
 
     return {
+        blur: richTextarea.blur,
         canDeleteText: richTextarea.canDeleteText,
         canRedo: richTextarea.canRedo,
         canUndo: richTextarea.canUndo,
@@ -6819,6 +6854,7 @@ function FileTabs_Tab (file, preferences) {
         untitledIndex
 
     return {
+        blur: file.blur,
         canDeleteText: file.canDeleteText,
         canRedo: file.canRedo,
         canUndo: file.canUndo,
@@ -7049,6 +7085,9 @@ function FileTabs_Tabs () {
             setActiveTab(fileTab)
             checkNumTabs()
         },
+        blurTextarea: function () {
+            if (activeTab) activeTab.blur()
+        },
         canDeleteText: function () {
             if (activeTab) {
                 return activeTab.canDeleteText()
@@ -7096,9 +7135,7 @@ function FileTabs_Tabs () {
             activeTab.findPrev()
         },
         focusTextarea: function () {
-            if (activeTab) {
-                activeTab.focus()
-            }
+            if (activeTab) activeTab.focus()
         },
         forRichTextarea: function (callback) {
             if (activeTab) {
@@ -7228,12 +7265,15 @@ function Menu_CheckItem (shortcutText) {
     var checked = false
 
     return {
+        blur: menuItem.blur,
         check: check,
         click: menuItem.click,
+        clickAndCollapse: menuItem.clickAndCollapse,
         collapse: menuItem.collapse,
         disable: menuItem.disable,
         element: menuItem.element,
         enable: menuItem.enable,
+        focus: menuItem.focus,
         isEnabled: menuItem.isEnabled,
         onClick: menuItem.onClick,
         onCollapse: menuItem.onCollapse,
@@ -7245,14 +7285,98 @@ function Menu_CheckItem (shortcutText) {
         isChecked: function () {
             return checked
         },
+        pressEscapeKey: function () {
+            return true
+        },
     }
 
 }
 ;
 function Menu_Group () {
 
+    function blurFocusedItem () {
+        if (focusedItem) {
+            focusedItem.blur()
+            focusedItem = null
+        }
+    }
+
     function collapse () {
+        blurFocusedItem()
+        collapseExpandedItem()
         menuElement.classList.remove('visible')
+        document.body.removeEventListener('keydown', documentKeyDown)
+        expanded = false
+    }
+
+    function collapseExpandedItem () {
+        if (expandedItem) {
+            expandedItem.collapse()
+            expandedItem = null
+        }
+    }
+
+    function documentKeyDown (e) {
+        if (!expandedItem) {
+            if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                var keyCode = e.keyCode
+                if (keyCode == KeyCodes.UP) {
+                    // UP
+                    e.preventDefault()
+                    var focusableItems = getFocusableItems()
+                    var itemToFocus
+                    if (focusedItem) {
+                        itemToFocus = focusableItems[focusableItems.indexOf(focusedItem) - 1]
+                    }
+                    if (!itemToFocus) {
+                        itemToFocus = focusableItems[focusableItems.length - 1]
+                    }
+                    if (itemToFocus) {
+                        focusItem(itemToFocus)
+                    }
+                } else if (keyCode == KeyCodes.DOWN) {
+                    // DOWN
+                    e.preventDefault()
+                    var focusableItems = getFocusableItems()
+                    var itemToFocus
+                    if (focusedItem) {
+                        itemToFocus = focusableItems[focusableItems.indexOf(focusedItem) + 1]
+                    }
+                    if (!itemToFocus) {
+                        itemToFocus = focusableItems[0]
+                    }
+                    if (itemToFocus) {
+                        focusItem(itemToFocus)
+                    }
+                } else if (keyCode == KeyCodes.ENTER) {
+                    // ENTER
+                    if (focusedItem) {
+                        e.preventDefault()
+                        focusedItem.clickAndCollapse()
+                    }
+                }
+            }
+        }
+    }
+
+    function expandItem (item) {
+        collapseExpandedItem()
+        if (item.expand) {
+            item.expand()
+            expandedItem = item
+        }
+    }
+
+    function focusItem (item) {
+        blurFocusedItem()
+        focusedItem = item
+        item.focus()
+    }
+
+    function getFocusableItems () {
+        return items.filter(function (item) {
+            return item.isEnabled()
+        })
     }
 
     var classPrefix = 'Menu_Group'
@@ -7277,9 +7401,13 @@ function Menu_Group () {
     var collapseListeners = [],
         mouseOverListeners = []
 
-    var expandedItem
+    var expandedItem,
+        focusedItem
 
-    var enabled = true
+    var items = []
+
+    var enabled = true,
+        expanded = false
 
     return {
         collapse: collapse,
@@ -7290,15 +7418,16 @@ function Menu_Group () {
                 ArrayCall(collapseListeners)
             })
             item.onMouseOver(function () {
-                if (expandedItem) {
-                    expandedItem.collapse()
-                    expandedItem = null
-                }
-                if (item.expand) {
-                    item.expand()
-                    expandedItem = item
-                }
+                focusItem(item)
+                expandItem(item)
             })
+            items.push(item)
+        },
+        blur: function () {
+            buttonElement.classList.remove('focused')
+        },
+        clickAndCollapse: function () {
+            ArrayCall(mouseOverListeners)
         },
         disable: function () {
             enabled = false
@@ -7311,14 +7440,29 @@ function Menu_Group () {
         },
         expand: function () {
             if (enabled) {
+                expanded = true
                 menuElement.classList.add('visible')
+                document.body.addEventListener('keydown', documentKeyDown)
             }
+        },
+        focus: function () {
+            buttonElement.classList.add('focused')
+        },
+        isEnabled: function () {
+            return enabled
         },
         onCollapse: function (listener) {
             collapseListeners.push(listener)
         },
         onMouseOver: function (listener) {
             mouseOverListeners.push(listener)
+        },
+        pressEscapeKey: function () {
+            if (expanded) {
+                collapse()
+                return false
+            }
+            return true
         },
         setText: function (text) {
             textNode.nodeValue = text
@@ -7331,6 +7475,11 @@ function Menu_Item (shortcutText) {
 
     function click () {
         ArrayCall(clickListeners)
+    }
+
+    function clickAndCollapse () {
+        click()
+        ArrayCall(collapseListeners)
     }
 
     function disable () {
@@ -7346,8 +7495,7 @@ function Menu_Item (shortcutText) {
     function handleMouseDown (e) {
         if (e.button === 0 && enabled) {
             e.preventDefault()
-            ArrayCall(collapseListeners)
-            click()
+            clickAndCollapse()
         }
     }
 
@@ -7385,10 +7533,17 @@ function Menu_Item (shortcutText) {
 
     return {
         click: click,
+        clickAndCollapse: clickAndCollapse,
         disable: disable,
         element: element,
         enable: enable,
         setIconName: icon.setIconName,
+        blur: function () {
+            buttonElement.classList.remove('focused')
+        },
+        focus: function () {
+            buttonElement.classList.add('focused')
+        },
         isEnabled: function () {
             return enabled
         },
@@ -7400,6 +7555,9 @@ function Menu_Item (shortcutText) {
         },
         onMouseOver: function (listener) {
             mouseOverListeners.push(listener)
+        },
+        pressEscapeKey: function () {
+            return true
         },
         setEnabled: function (enabled) {
             if (enabled) enable()
@@ -7414,10 +7572,32 @@ function Menu_Item (shortcutText) {
 ;
 function MenuBar_Bar () {
 
-    function collapse () {
+    function blur () {
         expandedItem.collapse()
         expandedItem = null
         document.body.removeEventListener('mousedown', documentMouseDown)
+        document.body.removeEventListener('keydown', documentKeyDown)
+        focused = false
+        ArrayCall(blurListeners)
+    }
+
+    function documentKeyDown (e) {
+        if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+            var keyCode = e.keyCode
+            if (keyCode == KeyCodes.LEFT) {
+                // LEFT
+                e.preventDefault()
+                var itemToExpand = items[items.indexOf(expandedItem) - 1]
+                if (!itemToExpand) itemToExpand = items[items.length - 1]
+                expandItem(itemToExpand)
+            } else if (keyCode == KeyCodes.RIGHT) {
+                // RIGHT
+                e.preventDefault()
+                var itemToExpand = items[items.indexOf(expandedItem) + 1]
+                if (!itemToExpand) itemToExpand = items[0]
+                expandItem(itemToExpand)
+            }
+        }
     }
 
     function documentMouseDown (e) {
@@ -7428,14 +7608,21 @@ function MenuBar_Bar () {
                 if (target == barItemsElement) return
                 target = target.parentNode
             }
-            collapse()
+            blur()
         }
     }
  
-    function expandItem (item) {
-        item.expand()
-        expandedItem = item
+    function focus () {
+        document.body.addEventListener('keydown', documentKeyDown)
         document.body.addEventListener('mousedown', documentMouseDown)
+        focused = true
+        ArrayCall(focusListeners)
+    }
+
+    function expandItem (item) {
+        if (expandedItem) expandedItem.collapse()
+        item.expand()
+        lastExpandedItem = expandedItem = item
     }
 
     var classPrefix = 'MenuBar_Bar'
@@ -7455,26 +7642,57 @@ function MenuBar_Bar () {
     element.appendChild(contentElement)
     element.appendChild(barElement)
 
-    var expandedItem
+    var blurListeners = [],
+        focusListeners = []
+
+    var items = []
+
+    var focused = false
+
+    var expandedItem,
+        lastExpandedItem
 
     return {
+        blur: blur,
         contentElement: wrapperElement,
         element: element,
         addItem: function (item) {
             barItemsElement.appendChild(item.element)
-            item.onCollapse(collapse)
-            item.onMouseDown(function (e) {
-                if (e.button === 0) {
-                    if (expandedItem) collapse()
-                    else expandItem(item)
-                }
-            })
-            item.onMouseOver(function () {
-                if (expandedItem) {
-                    collapse()
+            item.onCollapse(blur)
+            item.onMouseDown(function () {
+                if (focused) {
+                    blur()
+                } else {
+                    focus()
                     expandItem(item)
                 }
             })
+            item.onMouseOver(function () {
+                if (focused) expandItem(item)
+            })
+            items.push(item)
+        },
+        focus: function () {
+            focus()
+            expandItem(lastExpandedItem || items[0])
+        },
+        isFocused: function () {
+            return focused
+        },
+        onBlur: function (listener) {
+            blurListeners.push(listener)
+        },
+        onFocus: function (listener) {
+            focusListeners.push(listener)
+        },
+        pressEscapeKey: function () {
+            var shouldBlur
+            if (expandedItem) {
+                shouldBlur = expandedItem.pressEscapeKey()
+            } else {
+                shouldBlur = true
+            }
+            if (shouldBlur) blur()
         },
     }
 
@@ -7486,6 +7704,87 @@ function MenuBar_Item () {
         menuElement.appendChild(element)
     }
 
+    function blurFocusedItem () {
+        if (focusedItem) {
+            focusedItem.blur()
+            focusedItem = null
+        }
+    }
+
+    function collapseExpandedItem () {
+        if (expandedItem) {
+            expandedItem.collapse()
+            expandedItem = null
+        }
+    }
+
+    function documentKeyDown (e) {
+        if (!expandedItem) {
+            if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                var keyCode = e.keyCode
+                if (keyCode == KeyCodes.UP) {
+                    // UP
+                    e.preventDefault()
+                    var focusableItems = getFocusableItems()
+                    var itemToFocus
+                    if (focusedItem) {
+                        itemToFocus = focusableItems[focusableItems.indexOf(focusedItem) - 1]
+                    }
+                    if (!itemToFocus) {
+                        itemToFocus = focusableItems[focusableItems.length - 1]
+                    }
+                    if (itemToFocus) {
+                        focusItem(itemToFocus)
+                    }
+                } else if (keyCode == KeyCodes.DOWN) {
+                    // DOWN
+                    e.preventDefault()
+                    var focusableItems = getFocusableItems()
+                    var itemToFocus
+                    if (focusedItem) {
+                        itemToFocus = focusableItems[focusableItems.indexOf(focusedItem) + 1]
+                    }
+                    if (!itemToFocus) {
+                        itemToFocus = focusableItems[0]
+                    }
+                    if (itemToFocus) {
+                        focusItem(itemToFocus)
+                    }
+                } else if (keyCode == KeyCodes.ENTER) {
+                    // ENTER
+                    if (focusedItem) {
+                        e.preventDefault()
+                        focusedItem.clickAndCollapse()
+                    }
+                }
+            }
+        }
+    }
+
+    function expandItem (item) {
+        collapseExpandedItem()
+        if (item.expand) {
+            item.expand()
+            expandedItem = item
+        }
+    }
+
+    function focusItem (item) {
+        blurFocusedItem()
+        focusedItem = item
+        item.focus()
+    }
+
+    function getFocusableItems () {
+        return items.filter(function (item) {
+            return item.isEnabled()
+        })
+    }
+
+    function mouseDown () {
+        ArrayCall(mouseDownListeners)
+    }
+
     var textNode = TextNode('')
 
     var classPrefix = 'MenuBar_Item'
@@ -7493,7 +7792,7 @@ function MenuBar_Item () {
     var buttonElement = Div(classPrefix + '-button')
     buttonElement.appendChild(textNode)
     buttonElement.addEventListener('mousedown', function (e) {
-        ArrayCall(mouseDownListeners, e)
+        if (e.button === 0) mouseDown()
     })
 
     var menuElement = Div(classPrefix + '-menu')
@@ -7508,27 +7807,25 @@ function MenuBar_Item () {
     var collapseListeners = [],
         mouseDownListeners = []
 
-    var collapsableItems = []
+    var items = [],
+        collapsableItems = []
 
-    var expandedItem
+    var expandedItem,
+        focusedItem
 
     return {
         element: element,
+        mouseDown: mouseDown,
         addItem: function (item) {
             add(item.element)
             item.onCollapse(function () {
                 ArrayCall(collapseListeners)
             })
             item.onMouseOver(function () {
-                if (expandedItem) {
-                    expandedItem.collapse()
-                    expandedItem = null
-                }
-                if (item.expand) {
-                    item.expand()
-                    expandedItem = item
-                }
+                focusItem(item)
+                expandItem(item)
             })
+            items.push(item)
             if (item.collapse) {
                 collapsableItems.push(item)
             }
@@ -7539,13 +7836,17 @@ function MenuBar_Item () {
         collapse: function () {
             buttonElement.classList.remove('active')
             menuElement.classList.remove('visible')
+            document.body.removeEventListener('keydown', documentKeyDown)
             collapsableItems.forEach(function (item) {
                 item.collapse()
             })
+            blurFocusedItem()
+            collapseExpandedItem()
         },
         expand: function () {
             buttonElement.classList.add('active')
             menuElement.classList.add('visible')
+            document.body.addEventListener('keydown', documentKeyDown)
         },
         onCollapse: function (listener) {
             collapseListeners.push(listener)
@@ -7555,6 +7856,12 @@ function MenuBar_Item () {
         },
         onMouseOver: function (listener) {
             buttonElement.addEventListener('mouseover', listener)
+        },
+        pressEscapeKey: function () {
+            if (expandedItem) {
+                return expandedItem.pressEscapeKey()
+            }
+            return true
         },
         setText: function (text) {
             textNode.nodeValue = text
@@ -8935,6 +9242,9 @@ function RichTextarea_Textarea (preferences) {
         pushUndoState: pushUndoState,
         setSelectionRange: setSelectionRange,
         setValue: setValue,
+        blur: function () {
+            textarea.blur()
+        },
         canDeleteText: function () {
             return canDeleteText
         },

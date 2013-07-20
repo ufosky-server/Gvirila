@@ -85,6 +85,7 @@ function SidePane (dialogContainer, preferences, remoteApi) {
 
     return {
         addNewTab: addNewTab,
+        blurTextarea: fileTabs.blurTextarea,
         canCreateFolder: fileList.canCreateFolder,
         canCreateNetworkFolder: fileList.canCreateNetworkFolder,
         canDeleteText: fileTabs.canDeleteText,

@@ -65,6 +65,62 @@ function BottomToolBar () {
     toolBar.element.classList.add('BottomToolBar')
     return toolBar
 }
+function Button () {
+
+    function addClass (className) {
+        element.classList.add(className)
+    }
+
+    function click () {
+        if (!element.disabled) {
+
+            ArrayCall(clickListeners)
+
+            addClass('active')
+            clearTimeout(clickTimeout)
+            clickTimeout = setTimeout(function () {
+                element.classList.remove('active')
+            }, 100)
+
+        }
+    }
+
+    var clickTimeout
+
+    var textNode = TextNode('')
+
+    var element = document.createElement('button')
+    element.className = 'Button'
+    element.appendChild(textNode)
+    element.addEventListener('click', click)
+
+    var clickListeners = []
+
+    return {
+        addClass: addClass,
+        click: click,
+        element: element,
+        disable: function () {
+            element.disabled = true
+        },
+        enable: function () {
+            element.disabled = false
+        },
+        focus: function () {
+            element.focus()
+        },
+        onClick: function (listener) {
+            clickListeners.push(listener)
+        },
+        setText: function (text) {
+            textNode.nodeValue = text
+        },
+        unClick: function (listener) {
+            clickListeners.splice(clickListeners.indexOf(listener), 1)
+        },
+    }
+
+}
 function ButtonBar () {
 
     var classPrefix = 'ButtonBar'
@@ -118,62 +174,6 @@ function ButtonBar () {
                     button.enable()
                 })
             }
-        },
-    }
-
-}
-function Button () {
-
-    function addClass (className) {
-        element.classList.add(className)
-    }
-
-    function click () {
-        if (!element.disabled) {
-
-            ArrayCall(clickListeners)
-
-            addClass('active')
-            clearTimeout(clickTimeout)
-            clickTimeout = setTimeout(function () {
-                element.classList.remove('active')
-            }, 100)
-
-        }
-    }
-
-    var clickTimeout
-
-    var textNode = TextNode('')
-
-    var element = document.createElement('button')
-    element.className = 'Button'
-    element.appendChild(textNode)
-    element.addEventListener('click', click)
-
-    var clickListeners = []
-
-    return {
-        addClass: addClass,
-        click: click,
-        element: element,
-        disable: function () {
-            element.disabled = true
-        },
-        enable: function () {
-            element.disabled = false
-        },
-        focus: function () {
-            element.focus()
-        },
-        onClick: function (listener) {
-            clickListeners.push(listener)
-        },
-        setText: function (text) {
-            textNode.nodeValue = text
-        },
-        unClick: function (listener) {
-            clickListeners.splice(clickListeners.indexOf(listener), 1)
         },
     }
 
@@ -1069,6 +1069,13 @@ function HintToolButton (toolButton, hint) {
     }
 
 }
+var ID = (function () {
+    var n = 0
+    return function () {
+        n++
+        return 'id' + n
+    }
+})()
 function Icon (iconName) {
 
     var element = Div('Icon IconSprite ' + iconName)
@@ -1088,13 +1095,6 @@ function Icon (iconName) {
     }
 
 }
-var ID = (function () {
-    var n = 0
-    return function () {
-        n++
-        return 'id' + n
-    }
-})()
 function ImportSessionDialog (dialogContainer, preferences, remoteApi) {
 
     function showNotification (iconName, textGenerator) {
@@ -1743,6 +1743,30 @@ function NewNetworkFolderDialog (dialogContainer, preferences, remoteApi) {
     }
 
 }
+function Notification (iconName, textGenerator) {
+
+    var textNode = TextNode('')
+
+    var classPrefix = 'Notification'
+
+    var textElement = Div(classPrefix + '-text')
+    textElement.appendChild(textNode)
+
+    var icon = Icon()
+    icon.setIconName(iconName)
+
+    var element = Div(classPrefix)
+    element.appendChild(icon.element)
+    element.appendChild(textElement)
+
+    return {
+        element: element,
+        reloadPreferences: function () {
+            textNode.nodeValue = textGenerator()
+        },
+    }
+
+}
 function NotificationBar () {
 
     var classPrefix = 'NotificationBar'
@@ -1783,30 +1807,6 @@ function NotificationBar () {
                 element.classList.remove('visible')
             }, 3000)
 
-        },
-    }
-
-}
-function Notification (iconName, textGenerator) {
-
-    var textNode = TextNode('')
-
-    var classPrefix = 'Notification'
-
-    var textElement = Div(classPrefix + '-text')
-    textElement.appendChild(textNode)
-
-    var icon = Icon()
-    icon.setIconName(iconName)
-
-    var element = Div(classPrefix)
-    element.appendChild(icon.element)
-    element.appendChild(textElement)
-
-    return {
-        element: element,
-        reloadPreferences: function () {
-            textNode.nodeValue = textGenerator()
         },
     }
 
@@ -2429,12 +2429,32 @@ function RootPane () {
 
     function disableShortcuts () {
         document.body.removeEventListener('keydown', documentKeyDown)
+        document.body.removeEventListener('keyup', documentKeyUp)
         sidePane.disableTextarea()
+    }
+
+    function documentKeyUp (e) {
+        if (altKeyDown && !e.ctrlKey && !e.metaKey && !e.shiftKey &&
+            e.keyCode == KeyCodes.ALT) {
+            if (menuBar.isFocused()) {
+                menuBar.blur()
+            } else {
+                menuBar.focus()
+            }
+            e.preventDefault()
+        }
     }
 
     function documentKeyDown (e) {
         var keyCode = e.keyCode
         if (!e.metaKey) {
+
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && keyCode == KeyCodes.ALT) {
+                altKeyDown = true
+            } else {
+                altKeyDown = false
+            }
+
             if (e.ctrlKey) {
                 if (e.altKey) {
                     if (!e.shiftKey) {
@@ -2536,11 +2556,18 @@ function RootPane () {
                     } else if (keyCode == KeyCodes.F10) {
                         // F10
                         clickMenuItem(e, statusBarMenuItem)
+                    } else if (keyCode == KeyCodes.ESC) {
+                        // ESC
+                        if (menuBar.isFocused()) {
+                            menuBar.pressEscapeKey()
+                            e.preventDefault()
+                        }
                     } else {
                         sidePane.keyDown(e)
                     }
                 }
             }
+
         }
     }
 
@@ -2556,6 +2583,7 @@ function RootPane () {
 
     function enableShortcuts () {
         document.body.addEventListener('keydown', documentKeyDown)
+        document.body.addEventListener('keyup', documentKeyUp)
         sidePane.enableTextarea()
         sidePane.focusTextarea()
     }
@@ -2689,13 +2717,16 @@ function RootPane () {
         })
     }
 
+    var altKeyDown
+
     var languages = Languages()
 
     var preferences = Preferences(languages)
     preferences.onChange(reloadPreferences)
 
-    var menuBar = MenuBar_Bar(),
-        dialogContainer = menuBar.element
+    var menuBar = MenuBar_Bar()
+
+    var dialogContainer = menuBar.element
 
     var remoteApi = AwakeRemoteAPI()
 
@@ -3216,6 +3247,8 @@ function RootPane () {
         }
     })
 
+    menuBar.onFocus(sidePane.blurTextarea)
+    menuBar.onBlur(sidePane.focusTextarea)
     sidePane.onNotification(showNotification)
     sidePane.onCanDeleteText(deleteMenuItem.setEnabled)
     sidePane.onHiddenFilesShow(function (show) {
@@ -3704,6 +3737,7 @@ function SidePane (dialogContainer, preferences, remoteApi) {
 
     return {
         addNewTab: addNewTab,
+        blurTextarea: fileTabs.blurTextarea,
         canCreateFolder: fileList.canCreateFolder,
         canCreateNetworkFolder: fileList.canCreateNetworkFolder,
         canDeleteText: fileTabs.canDeleteText,
@@ -4150,22 +4184,6 @@ function ToolButton (iconElement) {
     }
 
 }
-function TopLabelFileField (preferences) {
-
-    var fileField = FileField(preferences)
-
-    var topLabel = TopLabel(fileField.element)
-
-    return {
-        element: topLabel.element,
-        clear: fileField.clear,
-        focus: fileField.focus,
-        getFileInput: fileField.getFileInput,
-        reloadPreferences: fileField.reloadPreferences,
-        setLabelText: topLabel.setText,
-    }
-
-}
 function TopLabel (value) {
 
     var textNode = TextNode()
@@ -4189,6 +4207,22 @@ function TopLabel (value) {
         setText: function (text) {
             textNode.nodeValue = text + ':'
         },
+    }
+
+}
+function TopLabelFileField (preferences) {
+
+    var fileField = FileField(preferences)
+
+    var topLabel = TopLabel(fileField.element)
+
+    return {
+        element: topLabel.element,
+        clear: fileField.clear,
+        focus: fileField.focus,
+        getFileInput: fileField.getFileInput,
+        reloadPreferences: fileField.reloadPreferences,
+        setLabelText: topLabel.setText,
     }
 
 }
@@ -4221,11 +4255,6 @@ function TopLabelTextField () {
     }
 
 }
-function UrlencodedXHR (url, callback) {
-    var xhr = XHR(url, callback)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    return xhr
-}
 var UTF8 = {
     decode: function (encoded) {
         return decodeURIComponent(escape(encoded))
@@ -4233,6 +4262,11 @@ var UTF8 = {
     encode: function (text) {
         return unescape(encodeURIComponent(text))
     },
+}
+function UrlencodedXHR (url, callback) {
+    var xhr = XHR(url, callback)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    return xhr
 }
 function XHR (url, callback) {
     var xhr = new XMLHttpRequest
