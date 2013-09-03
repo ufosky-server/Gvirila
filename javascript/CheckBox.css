@@ -24,8 +24,7 @@
     width: 24px;
     height: 24px;
     border-radius: 2px;
-    transition: background-color 0.1s;
-    -webkit-transition: background-color 0.1s;
+    transition: background-color 0.1s ease-in-out;
 }
 .CheckBox-button:focus {
     background-color: #474740;

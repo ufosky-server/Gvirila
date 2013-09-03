@@ -17,7 +17,6 @@
     border-color: #474740 #272720 #272720 #474740;
     background: #373730;
     transition: top 0.2s ease-in-out;
-    -webkit-transition: top 0.2s ease-in-out;
 }
 
 .FileTabs_Tabs-content {

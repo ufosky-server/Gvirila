@@ -33,22 +33,18 @@
 .ButtonBar-content .Button {
     background: #474740;
     background-image: linear-gradient(#575750, #474740);
-    background-image: -webkit-linear-gradient(#575750, #474740);
 }
 .ButtonBar-content .Button:focus {
     background: #676760;
     background-image: linear-gradient(#676760, #575750);
-    background-image: -webkit-linear-gradient(#676760, #575750);
 }
 .ButtonBar-content .Button:hover {
     background: #777770;
     background-image: linear-gradient(#777770, #676760);
-    background-image: -webkit-linear-gradient(#777770, #676760);
 }
 .ButtonBar-content .Button.active,
 .ButtonBar-content .Button:active {
     color: #a7a7a0;
     background: #272720;
     background-image: linear-gradient(#272720, #303027);
-    background-image: -webkit-linear-gradient(#272720, #303027);
 }

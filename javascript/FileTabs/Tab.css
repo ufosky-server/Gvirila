@@ -16,7 +16,6 @@
     color: #000;
     background: #d7d7d0;
     background: linear-gradient(#e7e7e0, #d7d7d0);
-    background: -webkit-linear-gradient(#e7e7e0, #d7d7d0);
 }
 
 .FileTabs_Tab-wrapper {
@@ -38,8 +37,7 @@
     bottom: 0;
     left: 7px;
     margin: auto;
-    transition: background-color 0.1s;
-    -webkit-transition: background-color 0.1s;
+    transition: background-color 0.1s ease-in-out;
 }
 
 .FileTabs_Tab-infoHint {

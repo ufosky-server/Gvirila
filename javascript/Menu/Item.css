@@ -25,7 +25,6 @@
 .Menu_Item-button.focused {
     background: #669900;
     background-image: linear-gradient(#77aa11, #669900);
-    background-image: -webkit-linear-gradient(#77aa11, #669900);
     box-shadow: 0 0 2px #77aa11 inset;
 }
 .Menu_Item-button.disabled {

@@ -9,7 +9,6 @@
     bottom: 40px;
     left: 0;
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 .hidden > .File_StatusBar-content {
     bottom: 0;
@@ -26,7 +25,6 @@
     border-bottom: 1px solid #202017;
     background: #272720 fixed;
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 .hidden > .File_StatusBar-bar {
     bottom: -40px;
@@ -40,7 +38,6 @@
     left: -1px;
     text-align: right;
     background-image: linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
-    background-image: -webkit-linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
 }
 
 .File_StatusBar-field {

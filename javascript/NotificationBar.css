@@ -1,20 +1,17 @@
 .NotificationBar-content {
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 
 .NotificationBar-bar {
     border-top: 1px solid #474740;
     border-bottom: 1px solid #202017;
     background-image: linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
-    background-image: -webkit-linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
     position: absolute;
     right: 0;
     bottom: -40px;
     left: 0;
     height: 40px;
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 
 .NotificationBar.visible > .NotificationBar-content {

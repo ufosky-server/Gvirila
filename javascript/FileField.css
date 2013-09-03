@@ -22,7 +22,6 @@
     overflow: hidden;
     cursor: pointer;
     background-image: linear-gradient(#c7c7c0, #b7b7b0);
-    background-image: -webkit-linear-gradient(#c7c7c0, #b7b7b0);
 }
 
 .FileField-fileinput {

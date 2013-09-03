@@ -10,7 +10,6 @@
     bottom: 0;
     width: 160px;
     transition: right 0.2s ease-in-out;
-    -webkit-transition: right 0.2s ease-in-out;
 }
 .File_PreviewPane.visible .File_PreviewPane-bar {
     right: 0;
@@ -23,7 +22,6 @@
     bottom: 0;
     left: 0;
     transition: right 0.2s ease-in-out;
-    -webkit-transition: right 0.2s ease-in-out;
 }
 .File_PreviewPane.visible > .File_PreviewPane-content{
     right: 160px;
@@ -41,7 +39,6 @@
     bottom: 0;
     width: 24px;
     background: linear-gradient(to right, rgba(199, 199, 192, 0), #c7c7c0);
-    background: -webkit-linear-gradient(left, rgba(199, 199, 192, 0), #c7c7c0);
 }
 
 .File_PreviewPane-viewport {

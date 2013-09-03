@@ -10,12 +10,10 @@
     right: 0;
     left: 0;
     transition: top 0.2s ease-in-out;
-    -webkit-transition: top 0.2s ease-in-out;
 }
 
 .File_Bar-content {
     transition: top 0.2s ease-in-out;
-    -webkit-transition: top 0.2s ease-in-out;
 }
 
 .File_Bar.visible > .File_Bar-content {

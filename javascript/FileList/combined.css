@@ -29,7 +29,6 @@
 .FileList_FileItem.selected {
     background: #669900;
     background-image: linear-gradient(#77aa11, #669900);
-    background-image: -webkit-linear-gradient(#77aa11, #669900);
     box-shadow: 0 0 2px #77aa11 inset;
 }
 
@@ -74,7 +73,6 @@
 .FileList_FolderItem-button.selected {
     background: #669900;
     background-image: linear-gradient(#77aa11, #669900);
-    background-image: -webkit-linear-gradient(#77aa11, #669900);
     box-shadow: 0 0 2px #77aa11 inset;
 }
 
@@ -121,7 +119,6 @@
     overflow: hidden;
     opacity: 0;
     transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
-    -webkit-transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 .FileList_FolderItem-items.expanded {
     opacity: 1;

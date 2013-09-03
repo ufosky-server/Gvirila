@@ -10,12 +10,10 @@
     right: 0;
     left: 0;
     transition: top 0.2s ease-in-out;
-    -webkit-transition: top 0.2s ease-in-out;
 }
 
 .File_Bar-content {
     transition: top 0.2s ease-in-out;
-    -webkit-transition: top 0.2s ease-in-out;
 }
 
 .File_Bar.visible > .File_Bar-content {
@@ -111,7 +109,6 @@
     bottom: 0;
     left: 44px;
     transition: left 0.2s ease-in-out;
-    -webkit-transition: left 0.2s ease-in-out;
 }
 .File_LineNumbers.hidden .File_LineNumbers-content {
     left: 0;
@@ -125,7 +122,6 @@
     left: 0;
     overflow: hidden;
     transition: left 0.2s ease-in-out;
-    -webkit-transition: left 0.2s ease-in-out;
 }
 .File_LineNumbers.hidden .File_LineNumbers-bar {
     left: -44px;
@@ -213,7 +209,6 @@
     bottom: 0;
     width: 160px;
     transition: right 0.2s ease-in-out;
-    -webkit-transition: right 0.2s ease-in-out;
 }
 .File_PreviewPane.visible .File_PreviewPane-bar {
     right: 0;
@@ -226,7 +221,6 @@
     bottom: 0;
     left: 0;
     transition: right 0.2s ease-in-out;
-    -webkit-transition: right 0.2s ease-in-out;
 }
 .File_PreviewPane.visible > .File_PreviewPane-content{
     right: 160px;
@@ -244,7 +238,6 @@
     bottom: 0;
     width: 24px;
     background: linear-gradient(to right, rgba(199, 199, 192, 0), #c7c7c0);
-    background: -webkit-linear-gradient(left, rgba(199, 199, 192, 0), #c7c7c0);
 }
 
 .File_PreviewPane-viewport {
@@ -342,7 +335,6 @@
     bottom: 40px;
     left: 0;
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 .hidden > .File_StatusBar-content {
     bottom: 0;
@@ -359,7 +351,6 @@
     border-bottom: 1px solid #202017;
     background: #272720 fixed;
     transition: bottom 0.2s ease-in-out;
-    -webkit-transition: bottom 0.2s ease-in-out;
 }
 .hidden > .File_StatusBar-bar {
     bottom: -40px;
@@ -373,7 +364,6 @@
     left: -1px;
     text-align: right;
     background-image: linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
-    background-image: -webkit-linear-gradient(rgba(247, 247, 240, 0.06), rgba(7, 7, 0, 0.06));
 }
 
 .File_StatusBar-field {
