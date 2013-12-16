@@ -1,6 +1,6 @@
 <?php
 
-function redirect ($url = 'index.php') {
+function redirect ($url = './') {
     header("Location: $url");
     header('Content-Type: text/html; charset=UTF-8');
     echo '<!DOCTYPE html>'
@@ -14,5 +14,5 @@ function redirect ($url = 'index.php') {
                 .'<p>The document has moved <a href="'.htmlspecialchars($url).'">here</a>.</p>'
             .'</body>'
         .'</html>';
-    die;
+    exit;
 }
