@@ -23,7 +23,7 @@ class FileSystemProxy {
 
     private function chdir ($splitPaths) {
         array_unshift($splitPaths, $this->rootDir);
-        $passedPaths = array();
+        $passedPaths = [];
         foreach ($splitPaths as $splitPath) {
             $passedPaths[] = $splitPath;
             $ok = @chdir($splitPath);
@@ -60,10 +60,10 @@ class FileSystemProxy {
                 throw new ReadWriteException($path);
             }
             $mtime = filemtime($fileName);
-            return array(
+            return [
                 'content' => $content,
                 'mtime' => $mtime,
-            );
+            ];
         }
         if (is_dir($fileName)) {
             throw new NotAFileException($path);
@@ -97,14 +97,14 @@ class FileSystemProxy {
 
     private function indexCurrent () {
         $names = scandir('.');
-        $items = array();
+        $items = [];
         if ($names) {
             foreach ($names as $name) {
                 if ($name === '.' || $name === '..') continue;
-                $items[] = array(
+                $items[] = [
                     'type' => is_dir($name) ? 'folder' : 'file',
                     'name' => $name,
-                );
+                ];
             }
         }
         return $items;
@@ -179,10 +179,10 @@ class FileSystemProxy {
     }
 
     function toClientJson () {
-        return array(
+        return [
             'type' => 'network-folder',
             'name' => $this->name,
-        );
+        ];
     }
 
 }

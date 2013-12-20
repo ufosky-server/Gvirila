@@ -12,7 +12,7 @@ list($path, $host, $username, $password) = request_strings(
 
 try {
     $fileSystem->mountFtp($path, $host, $username, $password);
-    echo json_encode(array('ok' => true));
+    echo json_encode(['ok' => true]);
 } catch (FileSystemException $e) {
     $e->echoClientJson();
 }

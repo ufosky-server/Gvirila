@@ -1,22 +1,21 @@
 <?php
 
-include_once 'ifset.php';
-
 function request_files () {
-    static $default = array(
+    static $default = [
         'name' => '',
         'type' => '',
         'tmp_name' => '',
         'error' => UPLOAD_ERR_NO_FILE,
         'size' => 0,
-    );
-    $array = func_get_args();
-    foreach ($array as &$item) {
-        if (isset($_FILES[$item])) {
-            $item = ifset($_FILES[$item], $default);
+    ];
+    $keys = func_get_args();
+    $values = [];
+    foreach ($keys as $key) {
+        if (array_key_exists($key, $_FILES) && is_string($_FILES[$key]['name'])) {
+            $values[] = $_FILES[$key];
         } else {
-            $item = $default;
+            $values[] = $default;
         }
     }
-    return $array;
+    return $values;
 }

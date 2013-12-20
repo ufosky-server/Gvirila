@@ -15,7 +15,7 @@ class FileSystemException extends Exception {
     }
 
     function toClientJson () {
-        $json = array('error' => $this->name);
+        $json = ['error' => $this->name];
         if ($this->path !== null) {
             $json['path'] = $this->path;
         }

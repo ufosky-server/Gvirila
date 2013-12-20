@@ -29,10 +29,10 @@ try {
                         .'<h1>Index of root/'.htmlspecialchars($path).'</h1>';
             $index = $item;
             if ($index['parentFolderPath'] !== null) {
-                array_unshift($index['items'], array(
+                array_unshift($index['items'], [
                     'type' => 'parent-folder',
                     'name' => '.. Parent Folder',
-                ));
+                ]);
             }
             $items = $index['items'];
             if ($items) {

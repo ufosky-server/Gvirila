@@ -1,7 +1,7 @@
 function ShareSessionDialog (dialogContainer, preferences) {
 
     var sessionLink = location.protocol + '//' + location.host
-        + location.pathname + '?sessionId=' + Cookie.get('sessionId')
+        + location.pathname + '?gvirila_sid=' + Cookie.get('gvirila_sid')
 
     var closeButton = Button()
 

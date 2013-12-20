@@ -10,7 +10,7 @@ header('Content-Type: application/json');
 
 try {
     $fileSystem->rename($path, $name);
-    echo json_encode(array('ok' => true));
+    echo json_encode(['ok' => true]);
 } catch (FileSystemException $e) {
     $e->echoClientJson();
 }

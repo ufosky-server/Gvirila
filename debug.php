@@ -7,15 +7,15 @@ include_once 'common.php';
 $head = '';
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/AboutDialog/Dialog.css',
         'javascript/AboutDialog/Label.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/AboutDialog/combined.css'));
+    $head .= include_css(['javascript/AboutDialog/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/AbsoluteDiv.css',
     'javascript/Button.css',
     'javascript/ButtonBar.css',
@@ -25,10 +25,10 @@ $head .= include_css(array(
     'javascript/Dialog.css',
     'javascript/DocumentStatisticsDialog.css',
     'javascript/ExportSessionDialog.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/File/Bar.css',
         'javascript/File/ErrorBar.css',
         'javascript/File/File.css',
@@ -39,12 +39,12 @@ if (false) {
         'javascript/File/ReplaceBar.css',
         'javascript/File/SearchBar.css',
         'javascript/File/StatusBar.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/File/combined.css'));
+    $head .= include_css(['javascript/File/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/FileField.css',
     'javascript/FileNameField.css',
     'javascript/Hint.css',
@@ -53,67 +53,66 @@ $head .= include_css(array(
     'javascript/ArrowDownHintToolButton.css',
     'javascript/ArrowUpHint.css',
     'javascript/ArrowUpHintToolButton.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/FileTabs/ScrollBar.css',
         'javascript/FileTabs/ScrollBarArrow.css',
         'javascript/FileTabs/Tab.css',
         'javascript/FileTabs/Tabs.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/FileTabs/combined.css'));
+    $head .= include_css(['javascript/FileTabs/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/Icon.css',
     'javascript/IconSprite.css',
     'javascript/ImportSessionDialog.css',
     'javascript/LeftLabel.css',
     'javascript/LicenseDialog.css',
     'javascript/LoadingText.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/Menu/Group.css',
         'javascript/Menu/Item.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/Menu/combined.css'));
+    $head .= include_css(['javascript/Menu/combined.css']);
 }
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/MenuBar/Bar.css',
         'javascript/MenuBar/Item.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/MenuBar/combined.css'));
+    $head .= include_css(['javascript/MenuBar/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/MessagePane.css',
     'javascript/NewFolderDialog.css',
     'javascript/NewNetworkFolderDialog.css',
     'javascript/Notification.css',
     'javascript/NotificationBar.css',
     'javascript/OpenFileDialog.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/PreferencesDialog/Dialog.css',
         'javascript/PreferencesDialog/GeneralTab.css',
         'javascript/PreferencesDialog/LanguageTab.css',
-
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/PreferencesDialog/combined.css'));
+    $head .= include_css(['javascript/PreferencesDialog/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/RenameDialog.css',
     'javascript/ReplaceFileConfirmDialog.css',
     'javascript/ResetSessionConfirmDialog.css',
@@ -126,18 +125,18 @@ $head .= include_css(array(
     'javascript/ShareSessionDialog.css',
     'javascript/SidePane.css',
     'javascript/Spinner.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/Tabs/Tab.css',
         'javascript/Tabs/Tabs.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/Tabs/combined.css'));
+    $head .= include_css(['javascript/Tabs/combined.css']);
 }
 
-$head .= include_css(array(
+$head .= include_css([
     'javascript/TextField.css',
     'javascript/ToggleToolButton.css',
     'javascript/ToolBar.css',
@@ -145,25 +144,25 @@ $head .= include_css(array(
     'javascript/ToolBarSeparator.css',
     'javascript/ToolButton.css',
     'javascript/TopLabel.css',
-));
+]);
 
 if (false) {
-    $head .= include_css(array(
+    $head .= include_css([
         'javascript/FileList/EmptyFolder.css',
         'javascript/FileList/FileItem.css',
         'javascript/FileList/FolderItem.css',
         'javascript/FileList/List.css',
-    ));
+    ]);
 } else {
-    $head .= include_css(array('javascript/FileList/combined.css'));
+    $head .= include_css(['javascript/FileList/combined.css']);
 }
 
-$head .= include_css(array('javascript/Main.css'));
+$head .= include_css(['javascript/Main.css']);
 
 $body = '';
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/AbsoluteDiv.js',
         'javascript/ApplyModifier.js',
         'javascript/ArrayCall.js',
@@ -234,23 +233,23 @@ if (false) {
         'javascript/UrlencodedXHR.js',
         'javascript/UTF8.js',
         'javascript/XHR.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/combined.js'));
+    $body .= include_js(['javascript/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/AboutDialog/Dialog.js',
         'javascript/AboutDialog/Label.js',
         'javascript/AboutDialog/VersionLabel.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/AboutDialog/combined.js'));
+    $body .= include_js(['javascript/AboutDialog/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/File/Bar.js',
         'javascript/File/ErrorBar.js',
         'javascript/File/File.js',
@@ -261,74 +260,74 @@ if (false) {
         'javascript/File/ReplaceBar.js',
         'javascript/File/SearchBar.js',
         'javascript/File/StatusBar.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/File/combined.js'));
+    $body .= include_js(['javascript/File/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/FileList/EmptyFolder.js',
         'javascript/FileList/FileItem.js',
         'javascript/FileList/FolderItem.js',
         'javascript/FileList/List.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/FileList/combined.js'));
+    $body .= include_js(['javascript/FileList/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/FileTabs/ScrollBar.js',
         'javascript/FileTabs/ScrollBarArrow.js',
         'javascript/FileTabs/Tab.js',
         'javascript/FileTabs/Tabs.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/FileTabs/combined.js'));
+    $body .= include_js(['javascript/FileTabs/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/Menu/CheckItem.js',
         'javascript/Menu/Group.js',
         'javascript/Menu/Item.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/Menu/combined.js'));
+    $body .= include_js(['javascript/Menu/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/MenuBar/Bar.js',
         'javascript/MenuBar/Item.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/MenuBar/combined.js'));
+    $body .= include_js(['javascript/MenuBar/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/Modifiers/EncodeBase64.js',
         'javascript/Modifiers/ChangeCase.js',
         'javascript/Modifiers/EncodeHex.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/Modifiers/combined.js'));
+    $body .= include_js(['javascript/Modifiers/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/PreferencesDialog/Dialog.js',
         'javascript/PreferencesDialog/GeneralTab.js',
         'javascript/PreferencesDialog/LanguageTab.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/PreferencesDialog/combined.js'));
+    $body .= include_js(['javascript/PreferencesDialog/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/RichTextarea/AltDownModule.js',
         'javascript/RichTextarea/AltUpModule.js',
         'javascript/RichTextarea/CtrlBackspaceModule.js',
@@ -364,13 +363,13 @@ if (false) {
         'javascript/RichTextarea/TabModule.js',
         'javascript/RichTextarea/Textarea.js',
         'javascript/RichTextarea/UpModule.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/RichTextarea/combined.js'));
+    $body .= include_js(['javascript/RichTextarea/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/String/FindCtrlDownIndex.js',
         'javascript/String/FindCtrlLeftIndex.js',
         'javascript/String/FindCtrlLeftSquareBracketIndex.js',
@@ -381,30 +380,30 @@ if (false) {
         'javascript/String/FindLineEnd.js',
         'javascript/String/FindLineStart.js',
         'javascript/String/FindUpIndex.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/String/combined.js'));
+    $body .= include_js(['javascript/String/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/Tabs/Tabs.js',
         'javascript/Tabs/Tab.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/Tabs/combined.js'));
+    $body .= include_js(['javascript/Tabs/combined.js']);
 }
 
 if (false) {
-    $body .= include_js(array(
+    $body .= include_js([
         'javascript/Languages/de/Terms.js',
         'javascript/Languages/en/Terms.js',
         'javascript/Languages/ka/Terms.js',
-    ));
+    ]);
 } else {
-    $body .= include_js(array('javascript/Languages/combined.js'));
+    $body .= include_js(['javascript/Languages/combined.js']);
 }
-$body .= include_js(array('javascript/Main.js'));
+$body .= include_js(['javascript/Main.js']);
 
 include_once 'fns/echo_page.php';
 echo_page($body, $head);

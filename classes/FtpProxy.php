@@ -39,7 +39,7 @@ class FtpProxy {
     }
 
     private function chdir ($ftp, $splitPaths) {
-        $passedPaths = array();
+        $passedPaths = [];
         foreach ($splitPaths as $splitPath) {
             $passedPaths[] = $splitPath;
             $ok = @ftp_chdir($ftp, $splitPath);
@@ -101,10 +101,10 @@ class FtpProxy {
                 unlink($tempnam);
                 $mtime = ftp_mdtm($ftp, $fileName);
                 $this->sessionResume();
-                return array(
+                return [
                     'content' => $content,
                     'mtime' => $mtime,
-                );
+                ];
             }
             if (ftp_is_dir($ftp, $fileName)) {
                 throw new NotAFileException($path);
@@ -161,14 +161,14 @@ class FtpProxy {
 
     private function indexCurrent ($ftp) {
         $names = ftp_nlist($ftp, '.');
-        $items = array();
+        $items = [];
         if ($names) {
             foreach ($names as $name) {
                 if ($name === '.' || $name === '..') continue;
-                $items[] = array(
+                $items[] = [
                     'type' => ftp_is_dir($ftp, $name) ? 'folder' : 'file',
                     'name' => $name,
-                );
+                ];
             }
         }
         return $items;
@@ -279,10 +279,10 @@ class FtpProxy {
     }
 
     function toClientJson () {
-        return array(
+        return [
             'type' => 'network-folder',
             'name' => $this->name,
-        );
+        ];
     }
 
 }

@@ -19,20 +19,23 @@ class File {
     }
 
     function getContent () {
-        return array(
+        return [
             'content' => $this->content,
             'mtime' => $this->mtime,
-        );
+        ];
     }
 
     function getContentType () {
         $extension = pathinfo($this->name, PATHINFO_EXTENSION);
-        $extensions = array(
+        $extensions = [
             'css' => 'text/css',
             'html' => 'text/html; charset=UTF-8',
             'js' => 'text/javascript',
-        );
-        return ifset($extensions[$extension], 'text/plain');
+        ];
+        if (array_key_exists($extension, $extensions)) {
+            return $extensions[$extension];
+        }
+        return 'text/plain';
     }
 
     function setContent ($content, &$mtime = null) {
@@ -44,10 +47,10 @@ class File {
     }
 
     function toClientJson () {
-        return array(
+        return [
             'type' => 'file',
             'name' => $this->name,
-        );
+        ];
     }
 
 }

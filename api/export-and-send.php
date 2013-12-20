@@ -25,11 +25,11 @@ if (preg_match('/^.+?@.+?\..+?$/', $email)) {
     $from = "exported-session@$_SERVER[SERVER_NAME]";
     $attachmentName = "gvirila-session-$date.zip";
 
-    $ok = mail_multipart($email, $subject, array(
+    $ok = mail_multipart($email, $subject, [
         build_multipart('text/html; charset=UTF-8', $subject),
         build_multipart('application/zip', $zipContent, $attachmentName),
-    ), "From: $from");
+    ], "From: $from");
 
 }
 
-echo json_encode(array('ok' => $ok));
+echo json_encode(['ok' => $ok]);

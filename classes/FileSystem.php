@@ -27,7 +27,7 @@ class FileSystem {
         $splitPaths = Path::split($path);
         $newFolderName = array_pop($splitPaths);
 
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             $parent->createFolder($path);
@@ -66,9 +66,9 @@ class FileSystem {
     }
 
     function exportZip ($fileName) {
-        $queue = array(
-            array('', $this->rootFolder),
-        );
+        $queue = [
+            ['', $this->rootFolder],
+        ];
         $zip = new ZipArchive;
         $zip->open($fileName, ZIPARCHIVE::CREATE);
         if ($this->rootFolder->isProxy) {
@@ -81,7 +81,7 @@ class FileSystem {
                         } else {
                             $subpath = $item->name;
                         }
-                        $queue[] = array($subpath, $item);
+                        $queue[] = [$subpath, $item];
                         $zip->addEmptyDir($subpath);
                     } elseif ($item instanceof File) {
                         if ($path) {
@@ -103,7 +103,7 @@ class FileSystem {
         $splitPaths = Path::split($path);
         $fileName = array_pop($splitPaths);
 
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             return $parent->getFileContent($path);
@@ -145,7 +145,7 @@ class FileSystem {
 
         $proxy = false;
         $splitPaths = Path::split($path);
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             session_commit();
@@ -202,14 +202,14 @@ class FileSystem {
             rrmdir($tempnam);
             return $result;
         }
-        return array('numFiles' => 0);
+        return ['numFiles' => 0];
     }
 
     private function importFolderRecursive ($rootPath, $relativePath, Folder $targetFolder) {
 
         $mtime = time();
 
-        $result = array('numFiles' => 0);
+        $result = ['numFiles' => 0];
 
         $files = scandir("$rootPath/$relativePath");
         foreach ($files as $file) {
@@ -241,7 +241,7 @@ class FileSystem {
 
     function importFolder ($path) {
         if ($this->rootFolder instanceof FtpFolder) {
-            return array('numFiles' => 0);
+            return ['numFiles' => 0];
         }
         return $this->importFolderRecursive($path, '', $this->rootFolder);
     }
@@ -252,7 +252,7 @@ class FileSystem {
 
         $splitPaths = Path::split($path);
 
-        $passedFolders = array();
+        $passedFolders = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             session_commit();
@@ -280,7 +280,7 @@ class FileSystem {
             $parent = $item;
         }
 
-        if (!isset($items)) {
+        if (!$proxy) {
             $items = $parent->index();
         }
 
@@ -303,7 +303,7 @@ class FileSystem {
 
         // set paths to the items
         foreach ($items as &$item) {
-            $item['path'] = Path::join(array($path, $item['name']));
+            $item['path'] = Path::join([$path, $item['name']]);
         }
 
         usort($items, function ($a, $b) {
@@ -313,12 +313,12 @@ class FileSystem {
             return strcasecmp($a['name'], $b['name']);
         });
 
-        return array(
+        return [
             'path' => $path,
             'parentFolderPath' => $parentFolderPath,
             'proxy' => $proxy,
             'items' => $items,
-        );
+        ];
 
     }
 
@@ -327,7 +327,7 @@ class FileSystem {
         $splitPaths = Path::split($path);
         $networkFolderName = array_pop($splitPaths);
 
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) return;
         while ($splitPaths) {
@@ -355,7 +355,7 @@ class FileSystem {
         $splitPaths = Path::split($path);
         $fileName = array_pop($splitPaths);
 
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             $parent->putFileContent($path, $content, $overwrite, $mtime);
@@ -406,7 +406,7 @@ class FileSystem {
         $splitPaths = Path::split($path);
         $name = array_pop($splitPaths);
 
-        $passedPaths = array();
+        $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             return $parent->remove($path);
@@ -453,7 +453,7 @@ class FileSystem {
             throw new NameException();
         }
 
-        $passedFolders = array();
+        $passedFolders = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             $parent->rename(Path::join($splitPaths), $newName);
@@ -488,10 +488,10 @@ class FileSystem {
 
         $splitPaths = Path::split($path);
 
-        $passedFolders = array();
+        $passedFolders = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
-            return array();
+            return [];
         }
         while ($splitPaths) {
             $folderName = array_shift($splitPaths);
@@ -509,7 +509,7 @@ class FileSystem {
 
         $files = $parent->searchFiles($name, $content);
         foreach ($files as &$file) {
-            $file['path'] = Path::join(array($path, $file['path']));
+            $file['path'] = Path::join([$path, $file['path']]);
         }
 
         return $files;

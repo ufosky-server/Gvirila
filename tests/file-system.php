@@ -1,5 +1,6 @@
 <?php
 
+chdir(__DIR__);
 chdir('..');
 header('Content-Type: text/plain');
 header('Cache-Control: no-cache');
@@ -11,7 +12,7 @@ include_once 'classes/FtpAuthenticationException.php';
 include_once 'classes/ItemAlreadyExistsException.php';
 include_once 'common.php';
 
-$tests = array(
+$tests = [
     1 => function ($fs) {
         $fs->createFolder('bin');
         $fs->createFolder('var');
@@ -308,18 +309,21 @@ $tests = array(
         $fs->remove('localhost/gvirila-test');
         return true;
     },
-);
+];
 
+$response = '';
 $fs = new FileSystem;
 foreach ($tests as $i => $test) {
     try {
         if ($test($fs)) {
-            echo "test #$i done.\n";
+            $response .= "test #$i done.\n";
         } else {
-            echo "test #$i fail.\n";
+            $response .= "test #$i fail.\n";
         }
     } catch (Exception $e) {
-        echo "test #$i error.\n";
+        ob_start();
         var_dump($e);
+        $response .= "test #$i error.\n".ob_get_clean();
     }
 }
+echo $response;

@@ -8,11 +8,11 @@ header('Cache-Control: no-cache');
 header('Content-Type: application/json');
 
 $ch = curl_init();
-curl_setopt_array($ch, array(
+curl_setopt_array($ch, [
     CURLOPT_URL => 'http://gvirila.com/launch/version.json',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT => 5,
-));
+]);
 
 $versionJson = curl_exec($ch);
 

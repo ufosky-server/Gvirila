@@ -11,7 +11,7 @@ list($path) = request_strings('path');
 
 try {
     $fileSystem->createFolder($path);
-    echo json_encode(array('ok' => true));
+    echo json_encode(['ok' => true]);
 } catch (FileSystemException $e) {
     $e->echoClientJson();
 }

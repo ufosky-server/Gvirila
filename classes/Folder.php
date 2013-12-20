@@ -15,7 +15,7 @@ class Folder {
     public $isProxy = false;
 
     public $name;
-    private $items = array();
+    private $items = [];
 
     function __construct ($name) {
         if (!Filename::isValid($name)) {
@@ -25,7 +25,7 @@ class Folder {
     }
 
     function get ($name) {
-        if (isset($this->items[$name])) {
+        if (array_key_exists($name, $this->items)) {
             return $this->items[$name];
         }
     }
@@ -44,7 +44,7 @@ class Folder {
 
     function put ($item) {
         $name = $item->name;
-        if (isset($this->items[$name])) {
+        if (array_key_exists($name, $this->items)) {
             throw new ItemAlreadyExistsException($name);
         } else {
             $this->items[$name] = $item;
@@ -52,17 +52,17 @@ class Folder {
     }
 
     function remove ($name) {
-        if (!isset($this->items[$name])) {
+        if (!array_key_exists($name, $this->items)) {
             throw new FileNotFoundException($name);
         }
         unset($this->items[$name]);
     }
 
     function rename ($name, $newName) {
-        if (!isset($this->items[$name])) {
+        if (!array_key_exists($name, $this->items)) {
             throw new ItemNotFoundException($name);
         }
-        if (isset($this->items[$newName])) {
+        if (array_key_exists($newName, $this->items)) {
             throw new ItemAlreadyExistsException($newName);
         }
         $item = $this->items[$name];
@@ -73,8 +73,8 @@ class Folder {
 
     function searchFiles ($name, $content) {
 
-        $folders = array();
-        $foundFiles = array();
+        $folders = [];
+        $foundFiles = [];
         foreach ($this->getItemArray() as $item) {
             if ($item instanceof Folder) {
                 $folders[] = $item;
@@ -111,7 +111,7 @@ class Folder {
         foreach ($folders as $folder) {
             $subfiles = $folder->searchFiles($name, $content);
             foreach ($subfiles as &$subfile) {
-                $subfile['path'] = Path::join(array($folder->name, $subfile['path']));
+                $subfile['path'] = Path::join([$folder->name, $subfile['path']]);
             }
             $foundFiles = array_merge($foundFiles, $subfiles);
         }
@@ -121,10 +121,10 @@ class Folder {
     }
 
     function toClientJson () {
-        return array(
+        return [
             'type' => 'folder',
             'name' => $this->name,
-        );
+        ];
     }
 
 }
