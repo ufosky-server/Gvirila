@@ -795,7 +795,7 @@ function RootPane () {
     var aboutDialog = AboutDialog_Dialog(dialogContainer, preferences, remoteApi)
 
     var installMenuItem = Menu_Item()
-    installMenuItem.setIconName('info')
+    installMenuItem.setIconName('install')
     ;(function () {
         var mozApps = navigator.mozApps
         if (mozApps) {
