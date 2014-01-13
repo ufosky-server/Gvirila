@@ -252,6 +252,7 @@ function RootPane () {
         importSessionMenuItem.setText(terms.IMPORT)
         shareSessionMenuItem.setText(terms.SHARE)
         resetSessionMenuItem.setText(terms.RESET)
+        installMenuItem.setText(terms.INSTALL_AS_AN_APPLICATION)
         aboutMenuItem.setText(terms.ABOUT)
 
         toolbarMenuItem.setText(terms.TOOLBAR)
@@ -793,6 +794,36 @@ function RootPane () {
 
     var aboutDialog = AboutDialog_Dialog(dialogContainer, preferences, remoteApi)
 
+    var installMenuItem = Menu_Item()
+    installMenuItem.setIconName('info')
+    ;(function () {
+        var mozApps = navigator.mozApps
+        if (mozApps) {
+            installMenuItem.onClick(function () {
+                var manifest = AbsoluteURL('webapp-manifest.php')
+                var checkRequest = mozApps.checkInstalled(manifest)
+                checkRequest.onsuccess = function () {
+                    if (checkRequest.result) {
+                        var notification = Notification('info', function () {
+                            return preferences.language.terms.GVIRILA_APPLICATION_ALREADY_INSTALLED
+                        })
+                        showNotification(notification)
+                    } else {
+                        var installRequest = mozApps.install(manifest)
+                        installRequest.onsuccess = function () {
+                            var notification = Notification('info', function () {
+                                return preferences.language.terms.GVIRILA_APPLICATION_INSTALLED
+                            })
+                            showNotification(notification)
+                        }
+                    }
+                }
+            })
+        } else {
+            installMenuItem.setEnabled(false)
+        }
+    })()
+
     var aboutMenuItem = Menu_Item()
     aboutMenuItem.setIconName('info')
     aboutMenuItem.onClick(function () {
@@ -800,6 +831,7 @@ function RootPane () {
     })
 
     var helpMenuBarItem = MenuBar_Item()
+    helpMenuBarItem.addItem(installMenuItem)
     helpMenuBarItem.addItem(aboutMenuItem)
 
     menuBar.addItem(fileMenuBarItem)

@@ -14,6 +14,7 @@ try {
 
 var files = [
     'AbsoluteDiv.js',
+    'AbsoluteURL.js',
     'ApplyModifier.js',
     'ArrayCall.js',
     'ArrowDownHint.js',

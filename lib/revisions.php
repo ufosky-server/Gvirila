@@ -1,6 +1,6 @@
 <?php
 
 $revisions = [
-    'compressed.css' => 18,
-    'compressed.js' => 25,
+    'compressed.css' => 19,
+    'compressed.js' => 26,
 ];

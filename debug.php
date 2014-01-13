@@ -164,6 +164,7 @@ $body = '';
 if (false) {
     $body .= include_js([
         'javascript/AbsoluteDiv.js',
+        'javascript/AbsoluteURL.js',
         'javascript/ApplyModifier.js',
         'javascript/ArrayCall.js',
         'javascript/ArrowDownHint.js',
@@ -413,8 +414,8 @@ echo
     .'<html>'
         .'<head>'
             .'<title>Gvirila</title>'
-            .'<link rel="icon" type="image/png" href="images/favicon.png" />'
-            .'<link rel="icon" type="image/png" href="images/favicon32.png" sizes="32x32" />'
+            .'<link rel="icon" type="image/png" href="images/icon16.png" />'
+            .'<link rel="icon" type="image/png" href="images/icon32.png" sizes="32x32" />'
             .'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
             .'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />'
             .$head
