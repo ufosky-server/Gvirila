@@ -1,7 +1,8 @@
 <?php
 
-include_once 'ModifiedDateException.php';
-include_once 'NameException.php';
+include_once __DIR__.'/Filename.php';
+include_once __DIR__.'/ModifiedDateException.php';
+include_once __DIR__.'/NameException.php';
 
 class File {
 

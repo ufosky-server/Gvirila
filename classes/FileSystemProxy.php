@@ -1,7 +1,18 @@
 <?php
 
+include_once __DIR__.'/File.php';
+include_once __DIR__.'/Filename.php';
+include_once __DIR__.'/FileNotFoundException.php';
+include_once __DIR__.'/FolderNotFoundException.php';
+include_once __DIR__.'/ItemAlreadyExistsException.php';
+include_once __DIR__.'/Path.php';
+include_once __DIR__.'/NotAFileException.php';
+include_once __DIR__.'/ReadWriteException.php';
+include_once __DIR__.'/NameException.php';
+
 class FileSystemProxy {
 
+    public $canSearch = true;
     public $type = 'network-folder';
     public $isProxy = true;
 
@@ -22,7 +33,10 @@ class FileSystemProxy {
     }
 
     private function chdir ($splitPaths) {
-        array_unshift($splitPaths, $this->rootDir);
+
+        $ok = @chdir($this->rootDir);
+        if (!$ok) throw new ReadWriteException('');
+
         $passedPaths = [];
         foreach ($splitPaths as $splitPath) {
             $passedPaths[] = $splitPath;
@@ -31,18 +45,19 @@ class FileSystemProxy {
                 throw new FolderNotFoundException(Path::join($passedPaths));
             }
         }
+
     }
 
     function createFolder ($path) {
         $splitPaths = Path::split($path);
         $folderName = array_pop($splitPaths);
         $this->chdir($splitPaths);
-        $ok = mkdir($folderName);
+        $ok = @mkdir($folderName);
         if (!$ok) {
-            if (is_file($folderName)) {
+            if (@is_file($folderName)) {
                 throw new ItemAlreadyExistsException($path);
             }
-            if (is_dir($folderName)) {
+            if (@is_dir($folderName)) {
                 throw new ItemAlreadyExistsException($path);
             }
             throw new ReadWriteException($path);
@@ -65,7 +80,7 @@ class FileSystemProxy {
                 'mtime' => $mtime,
             ];
         }
-        if (is_dir($fileName)) {
+        if (@is_dir($fileName)) {
             throw new NotAFileException($path);
         }
         throw new FileNotFoundException($path);
@@ -124,7 +139,7 @@ class FileSystemProxy {
             throw new ItemAlreadyExistsException($path);
         }
 
-        if ($mtime) {
+        if ($mtime !== null) {
             $oldMtime = filemtime($fileName);
             if ($oldMtime > $mtime) {
                 throw new ModifiedDateException;
@@ -176,6 +191,78 @@ class FileSystemProxy {
         } else {
             throw new ItemNotFoundException($path);
         }
+    }
+
+    private function searchFilesRecursive ($name, $content, $paths) {
+
+        $foundFiles = [];
+
+        $filenames = scandir('.');
+        $dirnames = [];
+        foreach ($filenames as $filename) {
+
+            if ($filename == '.' || $filename == '..') continue;
+            if (is_dir($filename)) {
+                $dirnames[] = $filename;
+            } else {
+
+                $nameMatched = true;
+                if ($name) {
+                    $nameMatched = false;
+                    if (strpos($filename, $name) !== false) {
+                        $nameMatched = true;
+                    }
+                }
+
+                $contentMatched = true;
+                if ($content) {
+                    $contentMatched = false;
+                    $fileContent = @file_get_contents($filename);
+                    if ($fileContent === false) {
+                        // TODO handle unreadable file
+                    } elseif (strpos($fileContent, $content) !== false) {
+                        $contentMatched = true;
+                    }
+                }
+
+                if ($nameMatched && $contentMatched) {
+                    $paths[] = $filename;
+                    $path = Path::join($paths);
+                    array_pop($paths);
+                    $foundFiles[] = [
+                        'type' => 'file',
+                        'name' => $filename,
+                        'path' => $path,
+                    ];
+                }
+            }
+        }
+
+        foreach ($dirnames as $dirname) {
+            $ok = @chdir($dirname);
+            if ($ok) {
+                $paths[] = $dirname;
+                $subfiles = $this->searchFilesRecursive($name, $content, $paths);
+                $foundFiles = array_merge($foundFiles, $subfiles);
+                array_pop($paths);
+                chdir('..');
+            } else {
+                // TODO handle unreadable directory
+            }
+        }
+
+        return $foundFiles;
+
+    }
+
+    function searchFiles ($path, $name, $content) {
+        $splitPaths = Path::split($path);
+        $this->chdir($splitPaths);
+        $files = $this->searchFilesRecursive($name, $content, []);
+        foreach ($files as &$file) {
+            $file['path'] = Path::join([$path, $file['path']]);
+        }
+        return $files;
     }
 
     function toClientJson () {

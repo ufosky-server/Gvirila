@@ -2747,7 +2747,7 @@ function RootPane () {
         newNetworkFolderMenuItem.setEnabled(sidePane.canCreateNetworkFolder())
     })
     sidePane.onPathChange(function (e) {
-        searchFilesMenuItem.setEnabled(!e.proxy)
+        searchFilesMenuItem.setEnabled(e.canSearch)
     })
     sidePane.onCanUndoRedo(function (canUndo, canRedo) {
         undoMenuItem.setEnabled(canUndo)

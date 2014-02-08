@@ -2,5 +2,5 @@
 
 $revisions = [
     'compressed.css' => 20,
-    'compressed.js' => 27,
+    'compressed.js' => 29,
 ];

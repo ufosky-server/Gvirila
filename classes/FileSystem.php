@@ -1,14 +1,14 @@
 <?php
 
-include_once 'File.php';
-include_once 'Filename.php';
-include_once 'Folder.php';
-include_once 'FtpProxy.php';
-include_once 'FileSystemProxy.php';
-include_once 'FileNotFoundException.php';
-include_once 'ItemNotFoundException.php';
-include_once 'NotAFolderException.php';
-include_once 'Path.php';
+include_once __DIR__.'/File.php';
+include_once __DIR__.'/Filename.php';
+include_once __DIR__.'/Folder.php';
+include_once __DIR__.'/FtpProxy.php';
+include_once __DIR__.'/FileSystemProxy.php';
+include_once __DIR__.'/FileNotFoundException.php';
+include_once __DIR__.'/ItemNotFoundException.php';
+include_once __DIR__.'/NotAFolderException.php';
+include_once __DIR__.'/Path.php';
 
 class FileSystem {
 
@@ -144,12 +144,14 @@ class FileSystem {
     function getItem ($path) {
 
         $proxy = false;
+        $canSearch = true;
         $splitPaths = Path::split($path);
         $passedPaths = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
             session_commit();
             $proxy = true;
+            $canSearch = $parent->canSearch;
             $parent = $parent->getItem($path);
         } else {
             while ($splitPaths) {
@@ -164,6 +166,7 @@ class FileSystem {
                     }
                 } elseif ($item->isProxy) {
                     $proxy = true;
+                    $canSearch = $item->canSearch;
                     session_commit();
                     try {
                         $parent = $item->getItem(Path::join($splitPaths));
@@ -187,7 +190,7 @@ class FileSystem {
         if ($parent instanceof Folder) {
             $parent = $parent->index();
         }
-        return $this->makeIndex($parent, $path, $proxy);
+        return $this->makeIndex($parent, $path, $proxy, $canSearch);
 
     }
 
@@ -249,6 +252,7 @@ class FileSystem {
     function index ($path) {
 
         $proxy = false;
+        $canSearch = true;
 
         $splitPaths = Path::split($path);
 
@@ -257,7 +261,7 @@ class FileSystem {
         if ($parent->isProxy) {
             session_commit();
             $items = $parent->index($path);
-            return $this->makeIndex($items, $path, true);
+            return $this->makeIndex($items, $path, true, $parent->canSearch);
         }
         while ($splitPaths) {
             $folderName = array_shift($splitPaths);
@@ -269,6 +273,7 @@ class FileSystem {
                 throw new NotAFolderException($path);
             } elseif ($item->isProxy) {
                 $proxy = true;
+                $canSearch = $item->canSearch;
                 session_commit();
                 try {
                     $items = $item->index(Path::join($splitPaths));
@@ -284,11 +289,11 @@ class FileSystem {
             $items = $parent->index();
         }
 
-        return $this->makeIndex($items, $path, $proxy);
+        return $this->makeIndex($items, $path, $proxy, $canSearch);
 
     }
 
-    private function makeIndex ($items, $path, $proxy) {
+    private function makeIndex ($items, $path, $proxy, $canSearch) {
 
         $splitPaths = Path::split($path);
 
@@ -317,6 +322,7 @@ class FileSystem {
             'path' => $path,
             'parentFolderPath' => $parentFolderPath,
             'proxy' => $proxy,
+            'canSearch' => $canSearch,
             'items' => $items,
         ];
 
@@ -416,9 +422,7 @@ class FileSystem {
             $passedPaths[] = $folderName;
             $item = $parent->get($folderName);
             if (!$item) {
-                // folder is already deleted
-                // nothing to do
-                return;
+                throw new FolderNotFoundException(Path::join($passedPaths));
             } elseif ($item instanceof File) {
                 throw new NotAFolderException($path);
             } elseif ($item->isProxy) {
@@ -426,6 +430,12 @@ class FileSystem {
                 try {
                     $item->remove(Path::join($splitPaths));
                     return;
+                } catch (FileNotFoundException $e) {
+                    $passedPaths[] = $e->path;
+                    throw new FileNotFoundException(Path::join($passedPaths));
+                } catch (FolderNotFoundException $e) {
+                    $passedPaths[] = $e->path;
+                    throw new FolderNotFoundException(Path::join($passedPaths));
                 } catch (ReadWriteException $e) {
                     $passedPaths[] = $e->path;
                     throw new ReadWriteException(Path::join($passedPaths));
@@ -437,8 +447,7 @@ class FileSystem {
         try {
             $parent->remove($name);
         } catch (FileNotFoundException $e) {
-            // final file or folder is already deleted
-            // nothing to do
+            throw new FileNotFoundException($path);
         }
     }
 
@@ -486,13 +495,16 @@ class FileSystem {
             throw new NameException;
         }
 
-        $splitPaths = Path::split($path);
-
-        $passedFolders = [];
         $parent = $this->rootFolder;
         if ($parent->isProxy) {
+            if ($parent->canSearch) {
+                return $parent->searchFiles($path, $name, $content);
+            }
             return [];
         }
+
+        $splitPaths = Path::split($path);
+        $passedFolders = [];
         while ($splitPaths) {
             $folderName = array_shift($splitPaths);
             $passedFolders[] = $folderName;
@@ -502,6 +514,13 @@ class FileSystem {
             } else if ($item instanceof File) {
                 throw new NotAFolderException($path);
             } elseif ($item->isProxy) {
+                if ($item->canSearch) {
+                    $files = $item->searchFiles(Path::join($splitPaths), $name, $content);
+                    foreach ($files as &$file) {
+                        $file['path'] = Path::join([$path, $file['path']]);
+                    }
+                    return $files;
+                }
                 throw new NotAFolderException(Path::join($passedFolders));
             }
             $parent = $item;

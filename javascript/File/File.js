@@ -47,7 +47,8 @@ function File_File (preferences, remoteApi) {
                             })
                         })
                     } else {
-                        if (error != 'FileNotFound' && error != 'FolderNotFound') {
+                        if (error != 'BinaryContent' && error != 'FileNotFound' && error != 'FolderNotFound') {
+                            // TODO show error message
                             richTextarea.setValue(response.content)
                             richTextarea.pushUndoState()
                             ArrayCall(contentListeners)

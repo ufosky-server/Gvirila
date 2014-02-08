@@ -3,17 +3,20 @@
 include_once __DIR__.'/../fns/ftp_is_dir.php';
 include_once __DIR__.'/../fns/ftp_is_file.php';
 include_once __DIR__.'/../fns/sys_tempnam.php';
-include_once 'Filename.php';
-include_once 'Folder.php';
-include_once 'FtpAuthenticationException.php';
-include_once 'FtpConnectionException.php';
-include_once 'ItemAlreadyExistsException.php';
-include_once 'NameException.php';
-include_once 'Path.php';
-include_once 'ReadWriteException.php';
+include_once __DIR__.'/Filename.php';
+include_once __DIR__.'/FileNotFoundException.php';
+include_once __DIR__.'/Folder.php';
+include_once __DIR__.'/FolderNotFoundException.php';
+include_once __DIR__.'/FtpAuthenticationException.php';
+include_once __DIR__.'/FtpConnectionException.php';
+include_once __DIR__.'/ItemAlreadyExistsException.php';
+include_once __DIR__.'/NameException.php';
+include_once __DIR__.'/Path.php';
+include_once __DIR__.'/ReadWriteException.php';
 
 class FtpProxy {
 
+    public $canSearch = false;
     public $type = 'network-folder';
     public $isProxy = true;
 
@@ -191,7 +194,7 @@ class FtpProxy {
                 throw new ItemAlreadyExistsException($path);
             }
 
-            if ($mtime) {
+            if ($mtime !== null) {
                 $oldMtime = ftp_mdtm($ftp, $fileName);
                 if ($oldMtime > $mtime) {
                     throw new ModifiedDateException;
@@ -246,18 +249,13 @@ class FtpProxy {
             if (ftp_is_dir($ftp, $name)) {
                 include_once __DIR__.'/../fns/ftp_rrmdir.php';
                 $ok = ftp_rrmdir($ftp, $name);
-                if (!$ok) {
-                    throw new ReadWriteException($path);
-                }
+                if (!$ok) throw new ReadWriteException($path);
             } elseif (ftp_is_file($ftp, $name)) {
                 $ok = @ftp_delete($ftp, $name);
-                if (!$ok) {
-                    throw new ReadWriteException($path);
-                }
+                if (!$ok) throw new ReadWriteException($path);
+            } else {
+                throw new FileNotFoundException($path);
             }
-        } catch (FolderNotFoundException $e) {
-            // folder already deleted
-            // nothing to do
         } catch (Exception $e) {
             $this->sessionResume();
             throw $e;
@@ -267,15 +265,21 @@ class FtpProxy {
 
     private function sessionResume () {
         if ($this->session_id) {
+            session_name($this->session_name);
             session_id($this->session_id);
             session_start();
             $this->session_id = null;
+            $this->session_name = null;
         }
     }
 
     private function sessionSuspend () {
-        $this->session_id = session_id();
-        if ($this->session_id) session_commit();
+        $session_id = session_id();
+        if ($session_id) {
+            $this->session_id = $session_id;
+            $this->session_name = session_name();
+            session_commit();
+        }
     }
 
     function toClientJson () {

@@ -1,6 +1,6 @@
 <?php
 
-include_once 'FileSystemException.php';
+include_once __DIR__.'/FileSystemException.php';
 
 class ItemAlreadyExistsException extends FileSystemException {
 

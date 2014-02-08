@@ -1,13 +1,11 @@
 <?php
 
-include_once 'Filename.php';
-include_once 'FileNotFoundException.php';
-include_once 'FolderNotFoundException.php';
-include_once 'FtpProxy.php';
-include_once 'ItemAlreadyExistsException.php';
-include_once 'NameException.php';
-include_once 'NotAFileException.php';
-include_once 'NotAFolderException.php';
+include_once __DIR__.'/File.php';
+include_once __DIR__.'/Filename.php';
+include_once __DIR__.'/FileNotFoundException.php';
+include_once __DIR__.'/Folder.php';
+include_once __DIR__.'/ItemAlreadyExistsException.php';
+include_once __DIR__.'/NameException.php';
 
 class Folder {
 

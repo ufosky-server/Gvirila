@@ -249,7 +249,7 @@ if (false) {
     $body .= include_js(['javascript/AboutDialog/combined.js']);
 }
 
-if (false) {
+if (true) {
     $body .= include_js([
         'javascript/File/Bar.js',
         'javascript/File/ErrorBar.js',

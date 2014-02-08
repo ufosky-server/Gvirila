@@ -143,15 +143,19 @@ function FileList_List (dialogContainer, preferences, remoteApi) {
                     listElement.appendChild(readErrorPane.element)
                     homeFolderButton.enable()
                 } else {
+                    var canSearch = response.canSearch
                     path = response.path
                     proxy = response.proxy
                     parentFolderPath = response.parentFolderPath
                     ArrayCall(pathChangeListeners, {
                         path: path,
                         proxy: proxy,
+                        canSearch: canSearch,
                     })
                     if (!proxy) {
                         createNetworkFolderButton.enable()
+                    }
+                    if (canSearch) {
                         searchFilesButton.enable()
                     }
 
