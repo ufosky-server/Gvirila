@@ -1,5 +1,15 @@
 function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
 
+    function deselect (item) {
+        selectedItems.splice(selectedItems.indexOf(item), 1)
+        item.deselect()
+    }
+
+    function emitSelect (items) {
+        dialog.hide()
+        ArrayCall(fileSelectListeners, items)
+    }
+
     function search () {
         var name = nameField.getValue(),
             content = contentField.getValue()
@@ -11,6 +21,8 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
                 listElement.removeChild(listElement.firstChild)
             }
 
+            selectedItems.splice()
+
             buttonBar.mask(function () {
                 return terms.SEARCHING
             })
@@ -21,13 +33,18 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
                         response.forEach(function (e) {
                             var item = FileList_FileItem(e)
                             item.onOpenFile(function () {
-                                dialog.hide()
-                                ArrayCall(fileSelectListeners, item)
+                                emitSelect([item])
                             })
-                            item.onMouseDown(function () {
-                                if (selectedItem) selectedItem.deselect()
-                                selectedItem = item
-                                item.select()
+                            item.onMouseDown(function (e) {
+                                if (e.ctrlKey) {
+                                    if (item.isSelected()) deselect(item)
+                                    else select(item)
+                                } else {
+                                    while (selectedItems.length) {
+                                        deselect(selectedItems[0])
+                                    }
+                                    select(item)
+                                }
                             })
                             listElement.appendChild(item.element)
                         })
@@ -42,6 +59,11 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
             })
 
         }
+    }
+
+    function select (item) {
+        item.select()
+        selectedItems.push(item)
     }
 
     function showNotification (iconName, textGenerator) {
@@ -70,6 +92,11 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var searchButton = Button()
     searchButton.onClick(search)
 
+    var openSelectedButton = Button()
+    openSelectedButton.onClick(function () {
+        if (selectedItems.length) emitSelect(selectedItems)
+    })
+
     var listElement = Div(classPrefix + '-list')
 
     var nothingFoundPane = MessagePane('info')
@@ -77,6 +104,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var buttonBar = ButtonBar()
     buttonBar.addButton(closeButton)
     buttonBar.addButton(searchButton)
+    buttonBar.addButton(openSelectedButton)
     buttonBar.contentElement.appendChild(nameFieldElement)
     buttonBar.contentElement.appendChild(contentFieldElement)
     buttonBar.contentElement.appendChild(listElement)
@@ -86,7 +114,9 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
 
     closeButton.onClick(dialog.hide)
 
-    var path, selectedItem
+    var selectedItems = []
+
+    var path
 
     var fileSelectListeners = [],
         notificationListeners = []
@@ -107,6 +137,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
             contentField.setLabelText(terms.CONTAINS_TEXT)
             closeButton.setText(terms.CLOSE)
             searchButton.setText(terms.SEARCH)
+            openSelectedButton.setText(terms.OPEN)
             nothingFoundPane.setText(terms.NO_FILES_FOUND)
             buttonBar.reloadPreferences()
         },

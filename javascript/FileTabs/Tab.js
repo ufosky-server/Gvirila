@@ -175,6 +175,7 @@ function FileTabs_Tab (file, preferences) {
             } else {
                 element.classList.remove('active')
             }
+            file.setSelected(selected)
         },
         setUntitledIndex: function (_untitledIndex) {
             untitled = true

@@ -111,7 +111,10 @@ function RichTextarea_Textarea (preferences) {
 
     function setSelectionRange (start, end, direction) {
         if (!direction) direction = selectionDirection
-        textarea.setSelectionRange(start, end, direction)
+        // June 04 2014 Firefox 29 throws NS_ERROR_FAILURE if textarea is not in HTML
+        if (selected) {
+            textarea.setSelectionRange(start, end, direction)
+        }
         checkSelectionChange()
     }
 
@@ -195,6 +198,8 @@ function RichTextarea_Textarea (preferences) {
     })
 
     var lastCursorColumn = 0
+
+    var selected = false
 
     return {
         element: textarea,
@@ -393,6 +398,9 @@ function RichTextarea_Textarea (preferences) {
         },
         setScrollTopPercent: function (percent) {
             textarea.scrollTop = (textarea.scrollHeight - textarea.clientHeight) * percent
+        },
+        setSelected: function (_selected) {
+            selected = _selected
         },
         undo: function () {
             if (canUndo) {

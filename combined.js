@@ -3585,6 +3585,16 @@ function SaveFileDialog (dialogContainer, preferences, remoteApi) {
 ;
 function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
 
+    function deselect (item) {
+        selectedItems.splice(selectedItems.indexOf(item), 1)
+        item.deselect()
+    }
+
+    function emitSelect (items) {
+        dialog.hide()
+        ArrayCall(fileSelectListeners, items)
+    }
+
     function search () {
         var name = nameField.getValue(),
             content = contentField.getValue()
@@ -3596,6 +3606,8 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
                 listElement.removeChild(listElement.firstChild)
             }
 
+            selectedItems.splice()
+
             buttonBar.mask(function () {
                 return terms.SEARCHING
             })
@@ -3606,13 +3618,18 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
                         response.forEach(function (e) {
                             var item = FileList_FileItem(e)
                             item.onOpenFile(function () {
-                                dialog.hide()
-                                ArrayCall(fileSelectListeners, item)
+                                emitSelect([item])
                             })
-                            item.onMouseDown(function () {
-                                if (selectedItem) selectedItem.deselect()
-                                selectedItem = item
-                                item.select()
+                            item.onMouseDown(function (e) {
+                                if (e.ctrlKey) {
+                                    if (item.isSelected()) deselect(item)
+                                    else select(item)
+                                } else {
+                                    while (selectedItems.length) {
+                                        deselect(selectedItems[0])
+                                    }
+                                    select(item)
+                                }
                             })
                             listElement.appendChild(item.element)
                         })
@@ -3627,6 +3644,11 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
             })
 
         }
+    }
+
+    function select (item) {
+        item.select()
+        selectedItems.push(item)
     }
 
     function showNotification (iconName, textGenerator) {
@@ -3655,6 +3677,11 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var searchButton = Button()
     searchButton.onClick(search)
 
+    var openSelectedButton = Button()
+    openSelectedButton.onClick(function () {
+        if (selectedItems.length) emitSelect(selectedItems)
+    })
+
     var listElement = Div(classPrefix + '-list')
 
     var nothingFoundPane = MessagePane('info')
@@ -3662,6 +3689,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
     var buttonBar = ButtonBar()
     buttonBar.addButton(closeButton)
     buttonBar.addButton(searchButton)
+    buttonBar.addButton(openSelectedButton)
     buttonBar.contentElement.appendChild(nameFieldElement)
     buttonBar.contentElement.appendChild(contentFieldElement)
     buttonBar.contentElement.appendChild(listElement)
@@ -3671,7 +3699,9 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
 
     closeButton.onClick(dialog.hide)
 
-    var path, selectedItem
+    var selectedItems = []
+
+    var path
 
     var fileSelectListeners = [],
         notificationListeners = []
@@ -3692,6 +3722,7 @@ function SearchFilesDialog (dialogContainer, preferences, remoteApi) {
             contentField.setLabelText(terms.CONTAINS_TEXT)
             closeButton.setText(terms.CLOSE)
             searchButton.setText(terms.SEARCH)
+            openSelectedButton.setText(terms.OPEN)
             nothingFoundPane.setText(terms.NO_FILES_FOUND)
             buttonBar.reloadPreferences()
         },
@@ -4966,6 +4997,7 @@ function File_File (preferences, remoteApi) {
         resize: resize,
         save: save,
         showSearchBar: showSearchBar,
+        setSelected: richTextarea.setSelected,
         deleteText: function () {
             if (!searchBar.isFocused() && !goToLineBar.isFocused()) {
                 richTextarea.deleteText()
@@ -6585,7 +6617,11 @@ function FileList_List (dialogContainer, preferences, remoteApi) {
         },
         onFileSelect: function (listener) {
             fileSelectListeners.push(listener)
-            searchFilesDialog.onFileSelect(listener)
+            searchFilesDialog.onFileSelect(function (files) {
+                files.forEach(function (file) {
+                    ArrayCall(fileSelectListeners, file)
+                })
+            })
         },
         onFolderCreate: function (listener) {
             newFolderDialog.onFolderCreate(listener)
@@ -6971,6 +7007,7 @@ function FileTabs_Tab (file, preferences) {
             } else {
                 element.classList.remove('active')
             }
+            file.setSelected(selected)
         },
         setUntitledIndex: function (_untitledIndex) {
             untitled = true
@@ -9193,7 +9230,10 @@ function RichTextarea_Textarea (preferences) {
 
     function setSelectionRange (start, end, direction) {
         if (!direction) direction = selectionDirection
-        textarea.setSelectionRange(start, end, direction)
+        // June 04 2014 Firefox 29 throws NS_ERROR_FAILURE if textarea is not in HTML
+        if (selected) {
+            textarea.setSelectionRange(start, end, direction)
+        }
         checkSelectionChange()
     }
 
@@ -9277,6 +9317,8 @@ function RichTextarea_Textarea (preferences) {
     })
 
     var lastCursorColumn = 0
+
+    var selected = false
 
     return {
         element: textarea,
@@ -9475,6 +9517,9 @@ function RichTextarea_Textarea (preferences) {
         },
         setScrollTopPercent: function (percent) {
             textarea.scrollTop = (textarea.scrollHeight - textarea.clientHeight) * percent
+        },
+        setSelected: function (_selected) {
+            selected = _selected
         },
         undo: function () {
             if (canUndo) {
