@@ -9,6 +9,7 @@ echo json_encode(array(
     'name' => 'Gvirila',
     'description' => 'The free web-based text editor.',
     'launch_path' => $base,
+    'appcache_path' => "$base/cache-manifest.php",
     'developer' => array(
         'name' => 'Gvirila Developers',
         'url' => 'http://gvirila.com/',
