@@ -413,6 +413,7 @@ function File_File (preferences, remoteApi) {
         resize: resize,
         save: save,
         showSearchBar: showSearchBar,
+        setSelected: richTextarea.setSelected,
         deleteText: function () {
             if (!searchBar.isFocused() && !goToLineBar.isFocused()) {
                 richTextarea.deleteText()

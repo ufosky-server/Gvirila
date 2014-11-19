@@ -467,6 +467,7 @@ function FileList_List (dialogContainer, preferences, remoteApi) {
         forwardButton.disable()
         parentFolderButton.disable()
         homeFolderButton.disable()
+        renameButton.disable()
         deleteButton.disable()
         createFolderButton.disable()
         createNetworkFolderButton.disable()
@@ -878,7 +879,11 @@ function FileList_List (dialogContainer, preferences, remoteApi) {
         },
         onFileSelect: function (listener) {
             fileSelectListeners.push(listener)
-            searchFilesDialog.onFileSelect(listener)
+            searchFilesDialog.onFileSelect(function (files) {
+                files.forEach(function (file) {
+                    ArrayCall(fileSelectListeners, file)
+                })
+            })
         },
         onFolderCreate: function (listener) {
             newFolderDialog.onFolderCreate(listener)

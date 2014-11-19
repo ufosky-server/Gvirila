@@ -6206,6 +6206,7 @@ function FileList_List (dialogContainer, preferences, remoteApi) {
         forwardButton.disable()
         parentFolderButton.disable()
         homeFolderButton.disable()
+        renameButton.disable()
         deleteButton.disable()
         createFolderButton.disable()
         createNetworkFolderButton.disable()
