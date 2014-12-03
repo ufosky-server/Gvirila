@@ -16,7 +16,7 @@ echo
             .'<link rel="icon" type="image/png" href="images/icon16.png" />'
             .'<link rel="icon" type="image/png" href="images/icon32.png" sizes="32x32" />'
             .'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
-            .'<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />'
+            .'<meta name="viewport" content="width=device-width, user-scalable=no" />'
             .'<link rel="stylesheet" type="text/css" href="compressed.css?'.$revisions['compressed.css'].'" />'
             .'<style type="text/css">'
             .'.IconSprite {'
