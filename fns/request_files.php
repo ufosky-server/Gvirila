@@ -8,14 +8,16 @@ function request_files () {
         'error' => UPLOAD_ERR_NO_FILE,
         'size' => 0,
     ];
-    $keys = func_get_args();
-    $values = [];
-    foreach ($keys as $key) {
-        if (array_key_exists($key, $_FILES) && is_string($_FILES[$key]['name'])) {
-            $values[] = $_FILES[$key];
+    $params = func_get_args();
+    foreach ($params as &$param) {
+        if (array_key_exists($param, $_FILES) &&
+            is_string($_FILES[$param]['name'])) {
+
+            $param = $_FILES[$param];
+
         } else {
-            $values[] = $default;
+            $param = $default;
         }
     }
-    return $values;
+    return $params;
 }

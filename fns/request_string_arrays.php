@@ -1,22 +1,18 @@
 <?php
 
 function request_string_arrays () {
-    $keys = func_get_args();
-    $arrays = [];
-    foreach ($keys as $key) {
-        if (array_key_exists($key, $_GET) && is_array($_GET[$key])) {
-            $array = $_GET[$key];
-        } elseif (array_key_exists($key, $_POST) && is_array($_POST[$key])) {
-            $array = $_POST[$key];
+    $params = func_get_args();
+    foreach ($params as &$param) {
+        if (array_key_exists($param, $_GET) && is_array($_GET[$param])) {
+            $param = $_GET[$param];
+        } elseif (array_key_exists($param, $_POST) && is_array($_POST[$param])) {
+            $param = $_POST[$param];
         } else {
-            $array = [];
+            $param = [];
         }
-        foreach ($array as &$value) {
-            if (!is_string($value)) {
-                $value = '';
-            }
+        foreach ($param as &$value) {
+            if (!is_string($value)) $value = '';
         }
-        $arrays[] = $array;
     }
-    return $arrays;
+    return $params;
 }
